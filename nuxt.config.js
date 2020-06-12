@@ -23,13 +23,29 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'element-ui/lib/theme-chalk/index.css'
+    'element-ui/lib/theme-chalk/index.css',
+    'swiper/dist/css/swiper.css',
+    'quill/dist/quill.snow.css',
+    'highlight.js/styles/monokai-sublime.css'
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    {
+      src: '~/plugins/vue-swiper.js',
+      ssr: false
+    },
+    {
+      src: '~plugins/nuxt-quill-plugin.js',
+      ssr: false
+    },
+    {
+      src: '~plugins/axios.js',
+      ssr: true
+    },
+    '~plugins/filters.js'
   ],
   /*
   ** Nuxt.js dev-modules
@@ -55,6 +71,12 @@ module.exports = {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    // See https://github.com/nuxt-community/axios-module#options
+    // prefix: '/api/',
+    // proxy: true // Can be also an object with default options
+    // proxy: {
+    //   '/api/': { target: 'https://shepherdnet.top', pathRewrite: {'^/api/': ''} }
+    // },
   },
   /*
   ** Build configuration

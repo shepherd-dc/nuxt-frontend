@@ -1,8 +1,21 @@
 <template>
   <div>
-    <nuxt />
+    <common-header class="position-fixed" />
+    <nuxt class="default-content-container" />
+    <common-footer />
   </div>
 </template>
+
+<script>
+import CommonHeader from '~/components/CommonHeader'
+import CommonFooter from '~/components/CommonFooter'
+export default {
+  components: {
+    CommonHeader,
+    CommonFooter
+  }
+}
+</script>
 
 <style>
 html {
@@ -15,6 +28,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
 }
 
 *,
@@ -51,5 +70,16 @@ html {
 .button--grey:hover {
   color: #fff;
   background-color: #35495e;
+}
+
+.position-fixed {
+  position: fixed;
+  z-index: 999;
+  background-color: #333;
+  width: 100%;
+}
+
+.default-content-container {
+  min-height: 91.5vh;
 }
 </style>

@@ -1,72 +1,87 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <h1 class="title">
-        nuxt-frontend
-      </h1>
-      <h2 class="subtitle">
-        My smashing Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
+  <section>
+    <div class="container">
+      <slogan />
+      <!-- <vue-swiper/> -->
+      <div class="content">
+        <el-row
+          :gutter="width > 1080 ? 10 : 0"
+          type="flex"
         >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+          <el-col :span="width > 1080 ? 18 : 24">
+            <main-card
+              v-for="(item, index) in menus"
+              :key="index"
+              :card_data="item"
+            />
+          </el-col>
+          <el-col
+            v-if="width > 1080"
+            :span="6"
+          >
+            <aside-card
+              :aside_title="title1"
+              :aside_data="articles_data"
+            />
+          </el-col>
+        </el-row>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import { mapGetters } from 'vuex'
+import URL from '~/globalurl'
+import Slogan from '~/components/Slogan'
+// import VueSwiper from '~/components/VueSwiper'
+import MainCard from '~/components/MainCard'
+import AsideCard from '~/components/AsideCard'
 
 export default {
   components: {
-    Logo
+    Slogan,
+    // VueSwiper,
+    MainCard,
+    AsideCard
+  },
+  async asyncData ({ app }) {
+    const { data } = await app.$axios.get(`${URL}/article`)
+    return {
+      articles_data: data.data.data
+    }
+  },
+  data () {
+    return {
+      title1: '最新'
+    }
+  },
+  // async fetch ({ app }) {
+  //   let { data } = await app.$axios.get(`${URL}/menu`)
+  //   await app.store.commit('ADD_MENUS', data)
+  // },
+  computed: {
+    ...mapGetters([
+      'menus',
+      'width'
+    ])
+  },
+  mounted () {
+    // console.log(this.menus)
   }
 }
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
+  .container {
+    padding-top: 60px;
+  }
+  .content {
+    max-width: 1280px;
+    margin: 10px auto;
+    padding-top: 10px;
+  }
+  .el-button--text {
+    color: #41b883;
+  }
 </style>
