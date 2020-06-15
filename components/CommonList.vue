@@ -3,17 +3,17 @@
     <div class="container">
       <div class="content">
         <el-row
-          :gutter="width > 1080 ? 10 : 0"
+          :gutter="isPC ? 10 : 0"
           type="flex"
         >
-          <el-col :span="width > 1080 ? 18 : 24">
+          <el-col :span="isPC ? 18 : 24">
             <main-card
               :card_data="card_data"
               :islist="islist"
             />
             <article-list :articles_data="list" />
             <pagination
-              v-show="total>10"
+              v-show="total > 10"
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
@@ -21,7 +21,7 @@
             />
           </el-col>
           <el-col
-            v-if="width > 1080"
+            v-if="isPC"
             :span="6"
           >
             <aside-card
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import URL from '~/globalurl'
+import { mapGetters } from 'vuex'
 import MainCard from '~/components/MainCard'
 import AsideCard from '~/components/AsideCard'
 import ArticleList from '~/components/ArticleList'
@@ -77,9 +77,9 @@ export default {
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
   },
   created () {
     // this.list = [...this.articles_data]
@@ -87,20 +87,20 @@ export default {
   },
   methods: {
     async getList () {
-      const { data } = await this.$axios.get(`${URL}/article`, {
+      const res = await this.$axios.get('/article', {
         params: { ...this.listQuery }
       })
-      this.list = data.data.data
-      this.total = data.data.total
+      if (res.error_code === 0) {
+        const { data } = res
+        this.list = data.data
+        this.total = data.total
+      }
     }
   }
 }
 </script>
 
 <style>
-  .container {
-    padding-top: 60px;
-  }
   .content {
     max-width: 1280px;
     margin: 10px auto;

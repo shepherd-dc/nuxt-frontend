@@ -3,10 +3,10 @@
     <div class="container">
       <div class="content">
         <el-row
-          :gutter="width > 1080 ? 10 : 0"
+          :gutter="isPC ? 10 : 0"
           type="flex"
         >
-          <el-col :span="width > 1080 ? 18 : 24">
+          <el-col :span="isPC ? 18 : 24">
             <el-card class="box-card">
               <div
                 slot="header"
@@ -17,12 +17,12 @@
                     首页
                   </el-breadcrumb-item>
                   <el-breadcrumb-item><a @click.stop="routerBread">{{ column_data.menu_name }}</a></el-breadcrumb-item>
-                  <el-breadcrumb-item>{{ column_data.name }}</el-breadcrumb-item>
+                  <el-breadcrumb-item>{{ column_data.name_zh }}</el-breadcrumb-item>
                 </el-breadcrumb>
               </div>
               <div class="text">
                 <el-row type="felx">
-                  <el-col :span="width > 1080 ? 8 : 24">
+                  <el-col :span="isPC ? 8 : 24">
                     <a
                       :href="column_data.official_doc"
                       target="_blank"
@@ -32,10 +32,10 @@
                       </div>
                     </a>
                   </el-col>
-                  <el-col :span="width > 1080 ? 16 : 24">
+                  <el-col :span="isPC ? 16 : 24">
                     <div class="text-info">
                       <h4 class="detail-title">
-                        {{ column_data.name | capitalize }}
+                        {{ column_data.name_zh | capitalize }}
                         <a
                           :href="column_data.official_doc"
                           target="_blank"
@@ -67,7 +67,7 @@
             </el-card>
             <article-list :articles_data="list" />
             <pagination
-              v-show="total>10"
+              v-show="total > 10"
               :total="total"
               :page.sync="listQuery.page"
               :limit.sync="listQuery.limit"
@@ -75,7 +75,7 @@
             />
           </el-col>
           <el-col
-            v-if="width > 1080"
+            v-if="isPC"
             :span="6"
           >
             <aside-card
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import URL from '~/globalurl'
+import { mapGetters } from 'vuex'
 import AsideCard from '~/components/AsideCard'
 import ArticleList from '~/components/ArticleList'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -128,9 +128,9 @@ export default {
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
   },
   created () {
     // this.list = [...this.articles_data]
@@ -144,24 +144,24 @@ export default {
     },
     routerBread () {
       this.$router.push({
-        path: `/${this.column_data.path.split('/')[0]}`
+        path: `/column/${this.column_data.path.split('/')[0]}`
       })
     },
     async getList () {
-      const { data } = await this.$axios.get(`${URL}/article`, {
+      const res = await this.$axios.get('/article', {
         params: { ...this.listQuery }
       })
-      this.list = data.data.data
-      this.total = data.data.total
+      if (res.error_code === 0) {
+        const { data } = res
+        this.list = data.data
+        this.total = data.total
+      }
     }
   }
 }
 </script>
 
 <style lang="less">
-.container {
-  padding-top: 60px;
-}
 .content {
   max-width: 1280px;
   margin: 10px auto;

@@ -2,8 +2,8 @@
   <div class="login">
     <el-row>
       <el-col
-        :span="width > 1080 ? 6 : 24"
-        :offset="width > 1080 ? 9 : 0"
+        :span="isPC ? 6 : 24"
+        :offset="isPC ? 9 : 0"
       >
         <el-card class="box-card">
           <div
@@ -83,14 +83,15 @@
 </template>
 
 <script>
-import URL from '~/globalurl'
+import { mapGetters } from 'vuex'
+
 export default {
   data () {
     const checkUser = async (rule, value, callback) => {
       if (!value) {
         return callback(new Error('昵称不能为空'))
       } else {
-        const { data } = await this.$axios.post(`${URL}/user/nickname`, {
+        const { data } = await this.$axios.post('/user/nickname', {
           nickname: this.ruleForm.nickname
         })
         if (data.error_code === 0) {
@@ -104,7 +105,7 @@ export default {
       if (!value) {
         return callback(new Error('邮箱不能为空'))
       } else {
-        const { data } = await this.$axios.post(`${URL}/user/email`, {
+        const { data } = await this.$axios.post('/user/email', {
           email: this.ruleForm.account
         })
         if (data.error_code === 0) {
@@ -159,15 +160,10 @@ export default {
       }
     }
   },
-  watch: {
-    width () {
-      this.width = window.innerWidth
-    }
-  },
-  mounted () {
-    const width = window.innerWidth
-    this.width = width
-    // console.log(this.menus)
+  computed: {
+    ...mapGetters([
+      'isPC'
+    ])
   },
   methods: {
     submitForm (formName) {
@@ -175,7 +171,7 @@ export default {
         if (valid) {
           delete this.ruleForm.checkPass
           this.ruleForm.type = 100
-          const { data } = await this.$axios.post(`${URL}/client/register`, this.ruleForm)
+          const { data } = await this.$axios.post('/client/register', this.ruleForm)
           if (data.error_code === 0) {
             this.$router.replace('/login')
           }

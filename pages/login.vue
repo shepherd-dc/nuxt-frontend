@@ -2,8 +2,8 @@
   <div class="login">
     <el-row>
       <el-col
-        :span="width > 1080 ? 6 : 24"
-        :offset="width > 1080 ? 9 : 0"
+        :span="isPC ? 6 : 24"
+        :offset="isPC ? 9 : 0"
       >
         <el-card class="box-card">
           <div
@@ -67,9 +67,8 @@
 </template>
 
 <script>
-import URL from '~/globalurl'
+import { mapGetters } from 'vuex'
 export default {
-
   data () {
     const checkUser = (rule, value, callback) => {
       if (!value) {
@@ -113,16 +112,16 @@ export default {
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
   },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.ruleForm2.type = 100
-          const { data } = await this.$axios.post(`${URL}/token`, this.ruleForm2)
+          const { data } = await this.$axios.post('/token', this.ruleForm2)
           if (data.error_code === 0) {
             this.$store.dispatch('Login', data.data.token)
             // this.$store.dispatch('USER_INFO', data)

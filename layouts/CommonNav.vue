@@ -27,9 +27,9 @@
         v-for="(subcol, subindex) in menu.submenu"
         :key="subindex"
         :index="(index+1)+'-'+(subindex+1)"
-        @click="routerTo(subcol.path, subcol.name)"
+        @click="routerTo(subcol.path, subcol.name_en)"
       >
-        {{ subcol.name }}
+        {{ subcol.name_zh }}
       </el-menu-item>
     </el-submenu>
     <!-- <el-submenu index="2">
@@ -71,6 +71,7 @@
 
 <script>
 export default {
+  name: 'CommonNav',
   props: {
     mymode: {
       type: String,
@@ -84,7 +85,7 @@ export default {
     }
   },
   // async created() {
-  //   let { data } = await this.$axios.get(`${URL}/menu?nav=nav`)
+  //   let { data } = await this.$axios.get(`/menu?nav=nav`)
   //   this.menus = data;
   // },
   computed: {
@@ -96,7 +97,7 @@ export default {
     routerTo (path, name) {
       const menu = path.split('/')[0]
       this.$router.push({
-        path: `/${menu}/${name}`
+        path: `/column/${menu}/${name}`
       })
     }
   }

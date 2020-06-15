@@ -19,7 +19,7 @@
         <el-col
           v-for="(item, index) in card_data.submenu"
           :key="index"
-          :span="width > 1080 ? 8 : 24"
+          :span="isPC ? 8 : 24"
         >
           <pic-card
             :sub_data="item"
@@ -32,7 +32,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import PicCard from './PicCard'
+
 export default {
   components: {
     PicCard
@@ -48,14 +50,14 @@ export default {
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
   },
   methods: {
     routerTo (path) {
       this.$router.push({
-        path: `/${path}`
+        path: `/column/${path}`
       })
     }
   }

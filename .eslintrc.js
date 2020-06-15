@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'nuxt/no-cjs-in-config': 'off',
     'camelcase': 'off',
+    'no-console': 'off',
     'vue/prop-name-casing': 0,
     'vue/no-v-html': 0
   }

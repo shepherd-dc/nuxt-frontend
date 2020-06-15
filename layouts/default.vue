@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import CommonHeader from '~/components/CommonHeader'
-import CommonFooter from '~/components/CommonFooter'
+import CommonHeader from './CommonHeader'
+import CommonFooter from './CommonFooter'
 export default {
   components: {
     CommonHeader,
@@ -81,5 +81,6 @@ a {
 
 .default-content-container {
   min-height: 91.5vh;
+  padding-top: 60px;
 }
 </style>

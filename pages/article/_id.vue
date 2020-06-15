@@ -1,10 +1,10 @@
 <template>
   <div class="article-detail">
     <el-row
-      :gutter="width > 1080 ? 10 : 0"
+      :gutter="isPC ? 10 : 0"
       type="flex"
     >
-      <el-col :span="width > 1080 ? 18 : 24">
+      <el-col :span="isPC ? 18 : 24">
         <el-card class="box-card">
           <div
             slot="header"
@@ -34,7 +34,7 @@
         </el-card>
       </el-col>
       <el-col
-        v-if="width > 1080"
+        v-if="isPC"
         :span="6"
       >
         <aside-card
@@ -47,23 +47,32 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AsideCard from '~/components/AsideCard'
-import URL from '~/globalurl'
 
 export default {
   components: {
     AsideCard
   },
-  async asyncData (context) {
-    const { data } = await context.$axios.get(`${URL}/article/${context.params.id}`)
-    // console.log(data)
-    const articles = await context.$axios.get(`${URL}/article`)
+  async asyncData ({ $axios, params }) {
+    let articleData = {}
+    let articlesData = []
+    const article = await $axios.get(`/article/${params.id}`)
+    if (article.error_code === 0) {
+      const { data } = article
+      articleData = data
+    }
+    const articles = await $axios.get('/article')
+    if (articles.error_code === 0) {
+      const { data } = articles
+      articlesData = data.data
+    }
     return {
-      article: data.data,
-      menuBread: data.data.menu_name,
-      submenuBread: data.data.column_name,
-      menu: data.data.en_name,
-      articles_data: articles.data.data.data
+      article: articleData,
+      menuBread: articleData.menu_name,
+      submenuBread: articleData.column_name,
+      menu: articleData.en_name,
+      articles_data: articlesData
     }
   },
   data () {
@@ -72,19 +81,22 @@ export default {
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
+  },
+  mounted () {
+    console.log(process.env.NODE_ENV, this.menu)
   },
   methods: {
     routerBreadMenu () {
       this.$router.push({
-        path: `/${this.menu}`
+        path: `/column/${this.menu}`
       })
     },
     routerBreadSubmenu () {
       this.$router.push({
-        path: `/${this.menu}/${this.submenuBread}`
+        path: `/column/${this.menu}/${this.submenuBread}`
       })
     }
   }

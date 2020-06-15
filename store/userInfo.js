@@ -1,12 +1,10 @@
-import URL from '~/globalurl'
-
 const userInfo = {
-  state: {
+  state: () => ({
     userInfo: {
       nickname: '',
       token: ''
     }
-  },
+  }),
   mutations: {
     TOKEN: (state, data) => {
       state.userInfo.token = data.token
@@ -23,7 +21,7 @@ const userInfo = {
   actions: {
     USER_INFO ({ commit }, { data }) {
       commit('TOKEN', data)
-      this.$axios.post(`${URL}/token/secret`, {
+      this.$axios.post('/token/secret', {
         token: data.token
       }).then((res) => {
         // if (res) {

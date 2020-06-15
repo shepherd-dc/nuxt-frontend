@@ -2,8 +2,8 @@
   <div class="publish">
     <el-row>
       <el-col
-        :span="width > 1080 ? 18 : 24"
-        :offset="width > 1080 ? 3 : 0"
+        :span="isPC ? 18 : 24"
+        :offset="isPC ? 3 : 0"
       >
         <el-card class="box-card">
           <div
@@ -84,7 +84,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import URL from '~/globalurl'
 import QuillEditor from '~/components/QuillEditor'
 
 export default {
@@ -101,13 +100,13 @@ export default {
     }
   },
   // async fetch ({ app }) {
-  //   let { data } = await app.$axios.get(`${URL}/menu`)
+  //   let { data } = await app.$axios.get(`/menu`)
   //   await app.store.commit('ADD_MENUS', data)
   // },
   computed: {
     ...mapGetters([
       'menus',
-      'width'
+      'isPC'
     ])
   },
   methods: {
@@ -116,7 +115,7 @@ export default {
       const column = formData.column_id.split('-')
       formData.column_id = column[0]
       const routePath = column[1]
-      const { data } = await this.$axios.post(`${URL}/article/publish`, formData)
+      const { data } = await this.$axios.post('/article/publish', formData)
       // console.log(data)
       if (data.error_code === 0) {
         this.$router.replace({

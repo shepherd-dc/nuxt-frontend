@@ -1,10 +1,10 @@
 <template>
   <div class="detail">
     <el-row
-      :gutter="width > 1080 ? 10 : 0"
+      :gutter="isPC ? 10 : 0"
       type="flex"
     >
-      <el-col :span="width > 1080 ? 18 : 24">
+      <el-col :span="isPC ? 18 : 24">
         <el-card class="box-card">
           <div
             slot="header"
@@ -39,7 +39,7 @@
           </div>
         </el-card>
         <pagination
-          v-show="total>0"
+          v-show="total > 0"
           :total="total"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
@@ -47,7 +47,7 @@
         />
       </el-col>
       <el-col
-        v-if="width > 1080"
+        v-if="isPC"
         :span="6"
       >
         <aside-card
@@ -61,8 +61,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AsideCard from '~/components/AsideCard'
-import URL from '~/globalurl'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -70,19 +70,23 @@ export default {
     AsideCard,
     Pagination
   },
-  async asyncData (context) {
+  async asyncData ({ $axios }) {
     const listQuery = {
       page: 1,
       limit: 10,
       menu_id: undefined,
       column_id: undefined
     }
-    const articles = await context.$axios.get(`${URL}/article`, {
+    const articles = await $axios.get('/article', {
       params: { ...listQuery }
     })
-    return {
-      articles_data: articles.data.data.data,
-      total: articles.data.data.total
+
+    if (articles.error_code === 0) {
+      const { data } = articles
+      return {
+        articles_data: data.data,
+        total: data.total
+      }
     }
   },
   data () {
@@ -99,32 +103,36 @@ export default {
       list: [],
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 10,
         menu_id: undefined,
         column_id: undefined
       }
     }
   },
   computed: {
-    width () {
-      return this.$store.state.width
-    }
+    ...mapGetters([
+      'isPC'
+    ])
   },
   created () {
     this.getList()
   },
   methods: {
+    // 翻页请求接口
+    async getList () {
+      const res = await this.$axios.get('/article', {
+        params: { ...this.listQuery }
+      })
+      if (res.error_code === 0) {
+        const { data } = res
+        this.list = data.data
+        this.total = data.total
+      }
+    },
     routerToDetail (id) {
       this.$router.push({
         path: `/article/${id}`
       })
-    },
-    async getList () {
-      const { data } = await this.$axios.get(`${URL}/article`, {
-        params: { ...this.listQuery }
-      })
-      this.list = data.data.data
-      this.total = data.data.total
     }
   }
 }

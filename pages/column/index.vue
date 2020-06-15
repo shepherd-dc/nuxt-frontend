@@ -4,27 +4,11 @@
       <slogan />
       <!-- <vue-swiper/> -->
       <div class="content">
-        <el-row
-          :gutter="isPC ? 10 : 0"
-          type="flex"
-        >
-          <el-col :span="isPC ? 18 : 24">
-            <main-card
-              v-for="(item, index) in menus"
-              :key="index"
-              :card_data="item"
-            />
-          </el-col>
-          <el-col
-            v-if="isPC"
-            :span="6"
-          >
-            <aside-card
-              :aside_title="title1"
-              :aside_data="articles_data"
-            />
-          </el-col>
-        </el-row>
+        <main-card
+          v-for="(item, index) in menus"
+          :key="index"
+          :card_data="item"
+        />
       </div>
     </div>
   </section>
@@ -35,27 +19,15 @@ import { mapGetters } from 'vuex'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
 import MainCard from '~/components/MainCard'
-import AsideCard from '~/components/AsideCard'
 
 export default {
   components: {
     Slogan,
     // VueSwiper,
-    MainCard,
-    AsideCard
-  },
-  async asyncData ({ $axios }) {
-    const res = await $axios.get('/article')
-    if (res.error_code === 0) {
-      const { data } = res
-      return {
-        articles_data: data.data
-      }
-    }
+    MainCard
   },
   data () {
     return {
-      title1: '最新'
     }
   },
   // async fetch ({ app }) {
@@ -64,8 +36,7 @@ export default {
   // },
   computed: {
     ...mapGetters([
-      'menus',
-      'isPC'
+      'menus'
     ])
   },
   mounted () {

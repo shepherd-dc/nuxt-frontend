@@ -1,12 +1,16 @@
 import { getToken, setToken, removeToken } from '~/utils/auth'
-import URL from '~/globalurl'
 
 const user = {
-  state: {
+  state: () => ({
     token: getToken(),
     nickname: '',
     avatar: '',
     roles: ''
+  }),
+
+  getters: {
+    nickname: state => state.user.nickname,
+    SNtoken: state => state.user.token
   },
 
   mutations: {
@@ -35,7 +39,7 @@ const user = {
       // localStorage.setItem('token', token)
       commit('SET_TOKEN', token)
 
-      const { data } = await this.$axios.post(`${URL}/token/secret`, {
+      const { data } = await this.$axios.post('/token/secret', {
         token
       })
       // eslint-disable-next-line

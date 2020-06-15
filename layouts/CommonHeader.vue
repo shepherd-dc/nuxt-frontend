@@ -7,7 +7,7 @@
         </div>
       </a>
       <el-row
-        v-if="width > 1080"
+        v-if="isPC"
         :gutter="10"
       >
         <el-col
@@ -21,7 +21,7 @@
         </el-col>
       </el-row>
       <el-row
-        v-if="width <= 1080 && !width == ''"
+        v-else
         :gutter="10"
       >
         <el-col>
@@ -53,9 +53,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import CommonNav from './CommonNav'
-import URL from '~/globalurl'
+import { isMobile } from '~/utils'
 import { getToken } from '~/utils/auth'
 export default {
+  name: 'CommonHeader',
   components: {
     CommonNav
   },
@@ -69,7 +70,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'width',
+      'isPC',
       'SNtoken',
       'nickname'
     ])
@@ -78,11 +79,11 @@ export default {
     if (getToken()) {
       this.token = getToken()
     }
-    const Width = window.innerWidth
-    this.$store.dispatch('SetWidth', Width)
+    const device = isMobile()
+    this.$store.commit('SET_DEVICE', !device)
     // this.token = localStorage.getItem('token')
     if (!this.SNtoken && this.token) {
-      const { data } = await this.$axios.post(`${URL}/token/secret`, {
+      const { data } = await this.$axios.post('/token/secret', {
         token: this.token
       })
       this.$store.commit('SET_TOKEN', data.token)

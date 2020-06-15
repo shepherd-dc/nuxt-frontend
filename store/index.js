@@ -1,42 +1,31 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import getters from './getters/getters'
-import errorLog from './modules/errorLog'
-import userInfo from './modules/userInfo'
-import user from './modules/user'
-import URL from '~/globalurl'
-
-Vue.use(Vuex)
-
-const store = () => new Vuex.Store({
-  state: {
-    width: 1080,
-    menus: []
-  },
-  mutations: {
-    ADD_MENUS: (state, data) => {
-      state.menus = data
-      // console.log(data)
-    },
-    SET_WIDTH: (state, width) => {
-      state.width = width
-    }
-  },
-  actions: {
-    async nuxtServerInit ({ commit }, context) {
-      const { data } = await context.$axios.get(`${URL}/menu`)
-      commit('ADD_MENUS', data.data)
-    },
-    SetWidth ({ commit }, width) {
-      commit('SET_WIDTH', width)
-    }
-  },
-  getters,
-  modules: {
-    errorLog,
-    userInfo,
-    user
-  }
+export const state = () => ({
+  menus: [],
+  isPC: true
 })
 
-export default store
+export const mutations = {
+  ADD_MENUS: (state, data) => {
+    state.menus = data
+    // console.log(data)
+  },
+  SET_DEVICE: (state, device) => {
+    state.isPC = device
+  }
+}
+
+export const actions = {
+  async nuxtServerInit ({ commit }, { $axios }) {
+    const res = await $axios.get('/menu')
+    if (res.error_code === 0) {
+      const { data } = res
+      commit('ADD_MENUS', data)
+    }
+  }
+}
+
+export const getters = {
+  menus: state => state.menus,
+  isPC: state => state.isPC,
+  nickname: state => state.user.nickname,
+  SNtoken: state => state.user.token
+}

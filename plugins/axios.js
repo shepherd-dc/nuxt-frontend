@@ -2,11 +2,19 @@
 import { getToken } from '~/utils/auth'
 
 export default function ({ $axios, redirect }) {
+  const baseUrl = process.env.NODE_ENV === 'development' ? process.env.LOCAL_URL : process.env.SERVER_URL
+  $axios.setBaseURL(baseUrl)
+
   $axios.onRequest((config) => {
     // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     config.auth = {}
     config.auth.username = getToken()
-    // console.log('Making request to ' + config.url)
+    console.log('Making request to ' + config.url)
+  })
+
+  $axios.onResponse((response) => {
+    console.log('Server response: ', response.data)
+    return response.data
   })
 
   $axios.onError((error) => {
