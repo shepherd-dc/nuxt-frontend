@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="register">
     <el-row>
       <el-col
         :span="isPC ? 6 : 24"
@@ -91,12 +91,12 @@ export default {
       if (!value) {
         return callback(new Error('昵称不能为空'))
       } else {
-        const { data } = await this.$axios.post('/user/nickname', {
+        const res = await this.$axios.post('/user/nickname', {
           nickname: this.ruleForm.nickname
         })
-        if (data.error_code === 0) {
+        if (res.error_code === 0) {
           callback()
-        } else if (data.error_code === 101) {
+        } else if (res.error_code === 101) {
           return callback(new Error('昵称已注册'))
         }
       }
@@ -105,12 +105,12 @@ export default {
       if (!value) {
         return callback(new Error('邮箱不能为空'))
       } else {
-        const { data } = await this.$axios.post('/user/email', {
+        const res = await this.$axios.post('/user/email', {
           email: this.ruleForm.account
         })
-        if (data.error_code === 0) {
+        if (res.error_code === 0) {
           callback()
-        } else if (data.error_code === 100) {
+        } else if (res.error_code === 100) {
           return callback(new Error('邮箱已注册'))
         }
       }
@@ -171,8 +171,8 @@ export default {
         if (valid) {
           delete this.ruleForm.checkPass
           this.ruleForm.type = 100
-          const { data } = await this.$axios.post('/client/register', this.ruleForm)
-          if (data.error_code === 0) {
+          const res = await this.$axios.post('/client/register', this.ruleForm)
+          if (res.error_code === 0) {
             this.$router.replace('/login')
           }
         } else {
@@ -189,10 +189,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .login {
-    padding-top: 60px;
-    min-height: 92vh;
-  }
   .box-card {
     margin-top: 60px;
     .login-head {

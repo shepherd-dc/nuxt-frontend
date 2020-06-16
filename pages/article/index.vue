@@ -62,7 +62,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AsideCard from '~/components/AsideCard'
+import AsideCard from '~/components/card/AsideCard'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -138,7 +138,8 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+  @import '../../assets/styles/cover.less';
   .detail {
     padding-top: 80px;
     max-width: 1280px;
@@ -147,15 +148,6 @@ export default {
   .head {
     padding: 0 30px;
     font-size: 14px;
-  }
-  .title {
-    text-align: center;
-    line-height: 56px;
-  }
-  .author {
-    text-align: center;
-    line-height: 36px;
-    margin-bottom: 40px;
   }
   .content {
     padding: 0 30px;
@@ -173,51 +165,6 @@ export default {
         color: #999;
       }
     }
-  }
-  .text {
-    font-size: 14px;
-  }
-
-  .item {
-    margin-bottom: 18px;
-  }
-
-  .el-breadcrumb {
-    line-height: 22px;
-  }
-  .el-button--text {
-    color:#41b883;
-  }
-  .item {
-  cursor: pointer;
-  &:hover {
-    color: #41b883;
-  }
-}
-
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
-  pre.ql-syntax {
-    // background-color: #f6f8fa;
-    background-color: #23241f;
-    color: #e2edf8;
-    font-family: "Consolas, Courier New, monospace, MicroSoft Yahei";
-    line-height: 30px;
-    padding: 16px;
-    margin: 14px 0;
-    overflow: auto;
-  }
-  blockquote {
-    border-left: 4px solid #ccc;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    padding-left: 16px;
   }
 
 </style>

@@ -18,16 +18,12 @@ const user = {
       state.token = token
     },
     SET_NAME: (state, name) => {
-      // eslint-disable-next-line
-      console.log(name)
       state.nickname = name
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
     SET_ROLES: (state, roles) => {
-      // eslint-disable-next-line
-      console.log(roles)
       state.roles = roles
     }
   },
@@ -39,13 +35,14 @@ const user = {
       // localStorage.setItem('token', token)
       commit('SET_TOKEN', token)
 
-      const { data } = await this.$axios.post('/token/secret', {
+      const res = await this.$axios.post('/token/secret', {
         token
       })
-      // eslint-disable-next-line
-      console.log(data)
-      commit('SET_ROLES', data.scope)
-      commit('SET_NAME', data.nickname)
+      if (res.error_code === 0) {
+        const { data } = res
+        commit('SET_ROLES', data.scope)
+        commit('SET_NAME', data.nickname)
+      }
     },
 
     // 登出

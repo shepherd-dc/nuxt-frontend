@@ -14,9 +14,9 @@
           </div>
           <div class="item-body">
             <el-form
-              ref="ruleForm2"
-              :model="ruleForm2"
-              :rules="rules2"
+              ref="ruleForm"
+              :model="ruleForm"
+              :rules="rules"
               label-width="100px"
               class="demo-ruleForm"
             >
@@ -25,7 +25,7 @@
                 prop="account"
               >
                 <el-input
-                  v-model="ruleForm2.account"
+                  v-model="ruleForm.account"
                   placeholder="请输入用户名或邮箱"
                 />
               </el-form-item>
@@ -34,7 +34,7 @@
                 prop="secret"
               >
                 <el-input
-                  v-model="ruleForm2.secret"
+                  v-model="ruleForm.secret"
                   type="password"
                   placeholder="请输入密码"
                   autocomplete="off"
@@ -44,17 +44,17 @@
                 label="验证码"
                 prop="vcode">
                 <el-input
-                  v-model="ruleForm2.vcode"
+                  v-model="ruleForm.vcode"
                   placeholder="请输入验证码"></el-input>
               </el-form-item> -->
               <el-form-item>
                 <el-button
                   type="success"
-                  @click="submitForm('ruleForm2')"
+                  @click="submitForm('ruleForm')"
                 >
                   提交
                 </el-button>
-                <el-button @click="resetForm('ruleForm2')">
+                <el-button @click="resetForm('ruleForm')">
                   重置
                 </el-button>
               </el-form-item>
@@ -93,12 +93,12 @@ export default {
     // }
 
     return {
-      ruleForm2: {
+      ruleForm: {
         secret: 'admin',
         account: ''
         // vcode: ''
       },
-      rules2: {
+      rules: {
         secret: [
           { validator: validatePass, trigger: 'blur' }
         ],
@@ -120,14 +120,15 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          this.ruleForm2.type = 100
-          const { data } = await this.$axios.post('/token', this.ruleForm2)
-          if (data.error_code === 0) {
-            this.$store.dispatch('Login', data.data.token)
+          this.ruleForm.type = 100
+          const res = await this.$axios.post('/token', this.ruleForm)
+          if (res.error_code === 0) {
+            const { data } = res
+            this.$store.dispatch('user/Login', data.token)
             // this.$store.dispatch('USER_INFO', data)
-            this.$router.go(-1)
-          } else if (data.error_code === 1002 || data.error_code === 1003) {
-            alert(data.msg)
+            this.$router.replace('/')
+          } else if (res.error_code === 1002 || res.error_code === 1003) {
+            alert(res.msg)
           }
         } else {
           // console.log('error submit!!')
@@ -143,10 +144,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .login {
-    padding-top: 60px;
-    min-height: 92vh;
-  }
   .box-card {
     margin-top: 60px;
     .login-head {

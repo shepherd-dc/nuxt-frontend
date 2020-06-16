@@ -9,11 +9,16 @@ export default function ({ $axios, redirect }) {
     // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     config.auth = {}
     config.auth.username = getToken()
-    console.log('Making request to ' + config.url)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Making request to ' + config.url)
+    }
+    return config
   })
 
   $axios.onResponse((response) => {
-    console.log('Server response: ', response.data)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Server response: ', response.data)
+    }
     return response.data
   })
 

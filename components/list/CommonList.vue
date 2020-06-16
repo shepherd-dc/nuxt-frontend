@@ -37,9 +37,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import MainCard from '~/components/MainCard'
-import AsideCard from '~/components/AsideCard'
-import ArticleList from '~/components/ArticleList'
+import MainCard from '~/components/card/MainCard'
+import AsideCard from '~/components/card/AsideCard'
+import ArticleList from '~/components/list/ArticleList'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -99,14 +99,3 @@ export default {
   }
 }
 </script>
-
-<style>
-  .content {
-    max-width: 1280px;
-    margin: 10px auto;
-    padding-top: 10px;
-  }
-  .page-container {
-    margin: 0 auto;
-  }
-</style>

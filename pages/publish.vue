@@ -41,7 +41,7 @@
                     <el-option
                       v-for="item in group.submenu"
                       :key="item.id"
-                      :label="item.name"
+                      :label="item.name_zh"
                       :value="item.id+'-'+item.path"
                     />
                   </el-option-group>
@@ -115,11 +115,10 @@ export default {
       const column = formData.column_id.split('-')
       formData.column_id = column[0]
       const routePath = column[1]
-      const { data } = await this.$axios.post('/article/publish', formData)
-      // console.log(data)
-      if (data.error_code === 0) {
+      const res = await this.$axios.post('/article/publish', formData)
+      if (res.error_code === 0) {
         this.$router.replace({
-          path: `/${routePath}`
+          path: `column/${routePath}`
         })
       }
     },
@@ -132,10 +131,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .publish {
-    padding-top: 60px;
-    min-height: 92vh;
-  }
   .box-card {
     margin-top: 30px;
     .publish-head {

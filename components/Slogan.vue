@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section>不想做全栈的程序猿不是好攻城狮~</section>
+    <section>全栈时代到来了~</section>
   </div>
 </template>
 

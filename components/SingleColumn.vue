@@ -91,8 +91,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AsideCard from '~/components/AsideCard'
-import ArticleList from '~/components/ArticleList'
+import AsideCard from '~/components/card/AsideCard'
+import ArticleList from '~/components/list/ArticleList'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -161,59 +161,36 @@ export default {
 }
 </script>
 
-<style lang="less">
-.content {
-  max-width: 1280px;
-  margin: 10px auto;
-  padding-top: 10px;
-}
+<style lang="less" scoped>
+@import '../assets/styles/cover.less';
+
 .box-card {
   margin-bottom: 10px;
 }
-.el-breadcrumb__inner.is-link:hover, .el-breadcrumb__inner a:hover {
-  color: #41b883;
+
+.text-info {
+  padding: 0 0 0 20px;
 }
-.el-breadcrumb {
-  line-height: 22px;
+.detail-title {
+  font-size: 18px;
 }
-.el-button--text {
-  color: #41b883;
+
+.description {
+  font-size: 14px;
+  color: #999;
+  line-height: 28px;
+  margin: 16px 0;
 }
-</style>
 
-<style lang="less" scoped>
-  .text-info {
-    padding: 0 0 0 20px;
+.image {
+  height: 150px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  img {
+    display: block;
+    width: 100%;
   }
-  .detail-title {
-    font-size: 18px;
-  }
+}
 
-  .description {
-    font-size: 14px;
-    color: #999;
-    line-height: 28px;
-    margin: 16px 0;
-  }
-
-  .image {
-    height: 150px;
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
-    img {
-      display: block;
-      width: 100%;
-    }
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-
-  .clearfix:after {
-      clear: both
-  }
 </style>

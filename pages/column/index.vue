@@ -18,7 +18,7 @@
 import { mapGetters } from 'vuex'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
-import MainCard from '~/components/MainCard'
+import MainCard from '~/components/card/MainCard'
 
 export default {
   components: {
@@ -45,13 +45,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang='less' scoped>
   .content {
     max-width: 1280px;
     margin: 10px auto;
     padding-top: 10px;
-  }
-  .el-button--text {
-    color: #41b883;
   }
 </style>

@@ -2,7 +2,7 @@
   <div>
     <common-header class="position-fixed" />
     <nuxt class="default-content-container" />
-    <common-footer />
+    <common-footer class="default-footer position-fixed" />
   </div>
 </template>
 
@@ -72,6 +72,10 @@ a {
   background-color: #35495e;
 }
 
+.el-input__prefix, .el-input__suffix {
+  color: #41b883;
+}
+
 .position-fixed {
   position: fixed;
   z-index: 999;
@@ -79,8 +83,12 @@ a {
   width: 100%;
 }
 
+.default-footer {
+  bottom: 0;
+  left: 0;
+}
+
 .default-content-container {
-  min-height: 91.5vh;
-  padding-top: 60px;
+  padding: 60px 0;
 }
 </style>

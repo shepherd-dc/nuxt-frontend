@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import list from '~/components/CommonList'
+import list from '~/components/list/CommonList'
 export default {
   components: {
     list

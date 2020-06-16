@@ -4,24 +4,16 @@
       slot="header"
       class="clearfix"
     >
-      <span>{{ aside_title }}</span>
-      <router-link to="/article">
-        <el-button
-          v-if="show_more"
-          style="float: right; padding: 3px 0"
-          type="text"
-        >
-          更多
-        </el-button>
-      </router-link>
+      <span>文章列表</span>
     </div>
     <div
-      v-for="data in aside_data"
-      :key="data.id"
-      class="text item"
-      @click="routerToDetail(data.id)"
+      v-for="article in articles_data"
+      :key="article.id"
+      class="text item list"
+      @click="routerToDetail(article.id)"
     >
-      {{ data.title }}
+      <h4>{{ article.title }}</h4>
+      <span class="time">{{ article.create_time }}</span>
     </div>
   </el-card>
 </template>
@@ -29,17 +21,9 @@
 <script>
 export default {
   props: {
-    aside_title: {
-      type: String,
-      default: ''
-    },
-    aside_data: {
+    articles_data: {
       type: Array,
       default: () => {}
-    },
-    show_more: {
-      type: Boolean,
-      default: true
     }
   },
   methods: {
@@ -52,7 +36,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .text {
   font-size: 14px;
 }
@@ -76,6 +60,17 @@ export default {
 
 .box-card {
   width: 100%;
-  margin-bottom: 10px;
 }
+
+.list {
+  display: flex;
+  justify-content: space-between;
+  h4 {
+    font-weight: normal;
+  }
+  .time {
+    color: #999;
+  }
+}
+
 </style>
