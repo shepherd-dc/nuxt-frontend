@@ -9,6 +9,7 @@
 </template>
 <script>
 import SingleColumn from '~/components/SingleColumn'
+import { MENU_SUBMENU, ARTICLE_LIST } from '~/api'
 export default {
   components: {
     SingleColumn
@@ -17,12 +18,12 @@ export default {
     let columnData = {}
     let articlesData = []
     let column_id = ''
-    const column = await $axios.get(`/menu/submenu/${params.id}`)
+    const column = await $axios.get(`${MENU_SUBMENU}/${params.id}`)
     if (column.error_code === 0) {
       const { data } = column
       columnData = data
       column_id = columnData.id.toString()
-      const articles = await $axios.get(`/article?column_id=${column_id}`)
+      const articles = await $axios.get(`${ARTICLE_LIST}?column_id=${column_id}`)
       if (articles.error_code === 0) {
         const { data } = articles
         articlesData = data.data

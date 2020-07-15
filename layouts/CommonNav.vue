@@ -81,13 +81,8 @@ export default {
   data () {
     return {
       activeIndex: '0'
-      // menus: []
     }
   },
-  // async created() {
-  //   let { data } = await this.$axios.get(`/menu?nav=nav`)
-  //   this.menus = data;
-  // },
   computed: {
     menus () {
       return this.$store.state.menus

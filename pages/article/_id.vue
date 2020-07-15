@@ -49,6 +49,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import AsideCard from '~/components/card/AsideCard'
+import { ARTICLE_LIST, ARTICLE_DETAIL } from '~/api'
 
 export default {
   components: {
@@ -57,12 +58,12 @@ export default {
   async asyncData ({ $axios, params }) {
     let articleData = {}
     let articlesData = []
-    const article = await $axios.get(`/article/${params.id}`)
+    const article = await $axios.get(`${ARTICLE_DETAIL}/${params.id}`)
     if (article.error_code === 0) {
       const { data } = article
       articleData = data
     }
-    const articles = await $axios.get('/article')
+    const articles = await $axios.get(ARTICLE_LIST)
     if (articles.error_code === 0) {
       const { data } = articles
       articlesData = data.data

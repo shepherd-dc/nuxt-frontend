@@ -1,3 +1,5 @@
+import { MENU_LIST } from '../api'
+
 export const state = () => ({
   menus: [],
   isPC: true
@@ -6,7 +8,6 @@ export const state = () => ({
 export const mutations = {
   ADD_MENUS: (state, data) => {
     state.menus = data
-    // console.log(data)
   },
   SET_DEVICE: (state, device) => {
     state.isPC = device
@@ -15,7 +16,7 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit ({ commit }, { $axios }) {
-    const res = await $axios.get('/menu')
+    const res = await $axios.get(MENU_LIST)
     if (res.error_code === 0) {
       const { data } = res
       commit('ADD_MENUS', data)

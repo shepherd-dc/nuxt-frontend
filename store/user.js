@@ -4,51 +4,29 @@ const user = {
   state: () => ({
     token: getToken(),
     nickname: '',
-    avatar: '',
-    roles: ''
+    avatar: ''
   }),
 
-  getters: {
-    nickname: state => state.user.nickname,
-    SNtoken: state => state.user.token
-  },
-
   mutations: {
-    SET_TOKEN: (state, token) => {
+    SET_TOKEN: (state, { token, nickname }) => {
       state.token = token
-    },
-    SET_NAME: (state, name) => {
-      state.nickname = name
-    },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
-    },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+      state.nickname = nickname
     }
   },
 
   actions: {
     // 登录
-    async Login ({ commit }, token) {
-      setToken(token)
-      // localStorage.setItem('token', token)
-      commit('SET_TOKEN', token)
-
-      const res = await this.$axios.post('/token/secret', {
-        token
-      })
-      if (res.error_code === 0) {
-        const { data } = res
-        commit('SET_ROLES', data.scope)
-        commit('SET_NAME', data.nickname)
-      }
+    Login ({ commit }, data) {
+      setToken(data)
+      commit('SET_TOKEN', data)
     },
 
     // 登出
     LogOut ({ commit }) {
-      commit('SET_TOKEN', '')
-      commit('SET_ROLES', '')
+      commit('SET_TOKEN', {
+        token: '',
+        nickname: ''
+      })
       removeToken()
     }
   }

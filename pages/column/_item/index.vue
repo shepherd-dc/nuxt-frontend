@@ -9,6 +9,7 @@
 </template>
 <script>
 import list from '~/components/list/CommonList'
+import { MENU_DETAIL, ARTICLE_LIST } from '~/api'
 export default {
   components: {
     list
@@ -17,12 +18,12 @@ export default {
     let cardData = []
     let articlesData = []
     let menu_id = ''
-    const menu = await $axios.get(`/menu/detail?en_name=${params.item}`)
+    const menu = await $axios.get(`${MENU_DETAIL}?en_name=${params.item}`)
     if (menu.error_code === 0) {
       const { data } = menu
       cardData = data
       menu_id = data.id.toString()
-      const articles = await $axios.get(`/article?menu_id=${menu_id}`)
+      const articles = await $axios.get(`${ARTICLE_LIST}?menu_id=${menu_id}`)
       if (articles.error_code === 0) {
         const { data } = articles
         articlesData = data.data

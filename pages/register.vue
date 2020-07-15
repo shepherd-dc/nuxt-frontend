@@ -84,6 +84,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { REGISTER_URL, CHECK_NICKNAME, CHECK_EMAIL } from '../api'
 
 export default {
   data () {
@@ -91,7 +92,7 @@ export default {
       if (!value) {
         return callback(new Error('昵称不能为空'))
       } else {
-        const res = await this.$axios.post('/user/nickname', {
+        const res = await this.$axios.post(CHECK_NICKNAME, {
           nickname: this.ruleForm.nickname
         })
         if (res.error_code === 0) {
@@ -105,7 +106,7 @@ export default {
       if (!value) {
         return callback(new Error('邮箱不能为空'))
       } else {
-        const res = await this.$axios.post('/user/email', {
+        const res = await this.$axios.post(CHECK_EMAIL, {
           email: this.ruleForm.account
         })
         if (res.error_code === 0) {
@@ -171,7 +172,7 @@ export default {
         if (valid) {
           delete this.ruleForm.checkPass
           this.ruleForm.type = 100
-          const res = await this.$axios.post('/client/register', this.ruleForm)
+          const res = await this.$axios.post(REGISTER_URL, this.ruleForm)
           if (res.error_code === 0) {
             this.$router.replace('/login')
           }

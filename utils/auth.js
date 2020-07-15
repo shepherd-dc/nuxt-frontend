@@ -1,15 +1,13 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'SN-Token'
-
-export function getToken () {
+export function getToken (TokenKey = 'SN-Token') {
   return Cookies.get(TokenKey)
 }
 
-export function setToken (token) {
+export function setToken (token, TokenKey = 'SN-Token') {
   return Cookies.set(TokenKey, token)
 }
 
-export function removeToken () {
+export function removeToken (TokenKey = 'SN-Token') {
   return Cookies.remove(TokenKey)
 }

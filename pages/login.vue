@@ -68,6 +68,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { LOGIN_URL } from '../api'
 export default {
   data () {
     const checkUser = (rule, value, callback) => {
@@ -121,11 +122,10 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.ruleForm.type = 100
-          const res = await this.$axios.post('/token', this.ruleForm)
+          const res = await this.$axios.post(LOGIN_URL, this.ruleForm)
           if (res.error_code === 0) {
             const { data } = res
-            this.$store.dispatch('user/Login', data.token)
-            // this.$store.dispatch('USER_INFO', data)
+            this.$store.dispatch('user/Login', data)
             this.$router.replace('/')
           } else if (res.error_code === 1002 || res.error_code === 1003) {
             alert(res.msg)

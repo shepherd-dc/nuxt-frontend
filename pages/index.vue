@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { ARTICLE_LIST } from '../api'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
 import MainCard from '~/components/card/MainCard'
@@ -45,7 +46,7 @@ export default {
     AsideCard
   },
   async asyncData ({ $axios }) {
-    const res = await $axios.get('/article')
+    const res = await $axios.get(ARTICLE_LIST)
     if (res.error_code === 0) {
       const { data } = res
       return {
@@ -59,7 +60,7 @@ export default {
     }
   },
   // async fetch ({ app }) {
-  //   let { data } = await app.$axios.get(`/menu`)
+  //   let { data } = await app.$axios.get(`v1/menu`)
   //   await app.store.commit('ADD_MENUS', data)
   // },
   computed: {

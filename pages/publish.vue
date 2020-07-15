@@ -85,6 +85,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import QuillEditor from '~/components/QuillEditor'
+import { ARTICLE_PUBLISH } from '~/api'
 
 export default {
   components: {
@@ -115,7 +116,7 @@ export default {
       const column = formData.column_id.split('-')
       formData.column_id = column[0]
       const routePath = column[1]
-      const res = await this.$axios.post('/article/publish', formData)
+      const res = await this.$axios.post(ARTICLE_PUBLISH, formData)
       if (res.error_code === 0) {
         this.$router.replace({
           path: `column/${routePath}`

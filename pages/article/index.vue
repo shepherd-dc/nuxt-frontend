@@ -62,6 +62,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { ARTICLE_LIST } from '~/api'
+
 import AsideCard from '~/components/card/AsideCard'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -77,7 +79,7 @@ export default {
       menu_id: undefined,
       column_id: undefined
     }
-    const articles = await $axios.get('/article', {
+    const articles = await $axios.get(ARTICLE_LIST, {
       params: { ...listQuery }
     })
 
@@ -120,7 +122,7 @@ export default {
   methods: {
     // 翻页请求接口
     async getList () {
-      const res = await this.$axios.get('/article', {
+      const res = await this.$axios.get(ARTICLE_LIST, {
         params: { ...this.listQuery }
       })
       if (res.error_code === 0) {

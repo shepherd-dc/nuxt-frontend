@@ -37,6 +37,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { ARTICLE_LIST } from '~/api'
 import MainCard from '~/components/card/MainCard'
 import AsideCard from '~/components/card/AsideCard'
 import ArticleList from '~/components/list/ArticleList'
@@ -87,7 +88,7 @@ export default {
   },
   methods: {
     async getList () {
-      const res = await this.$axios.get('/article', {
+      const res = await this.$axios.get(ARTICLE_LIST, {
         params: { ...this.listQuery }
       })
       if (res.error_code === 0) {

@@ -37,15 +37,17 @@
       </el-row>
     </nav>
     <div class="login">
-      <div v-if="!token && !SNtoken">
-        <span @click="routerToLogin()">登录</span> | <span @click="routerToRegister()">注册</span>
+      <div v-if="!SNtoken">
+        <span @click="routerToLogin()">登录</span> |
+        <span @click="routerToRegister()">注册</span>
       </div>
-      <div v-if="token || SNtoken">
+      <div v-else>
         <span
           class="publish-btn"
           @click="routerToPublish()"
         >发帖</span>
-        <span>{{ nickname || name }}</span> | <span @click="routerToLogout()">退出</span>
+        <span>{{ nickname }}</span> |
+        <span @click="routerToLogout()">退出</span>
       </div>
     </div>
   </div>
@@ -76,25 +78,26 @@ export default {
       'nickname'
     ])
   },
-  async mounted () {
-    if (getToken()) {
-      this.token = getToken()
-    }
-    const device = isMobile()
-    this.$store.commit('SET_DEVICE', !device)
-    if (!this.SNtoken && this.token) {
-      const res = await this.$axios.post('/token/secret', {
-        token: this.token
-      })
-      if (res.error_code === 0) {
-        const { data } = res
-        this.$store.commit('user/SET_TOKEN', data.token)
-        this.name = data.nickname
-      }
-    }
-    // console.log(this.SNtoken, this.nickname)
+  created () {
+    this.initUserInfo()
+  },
+  mounted () {
+    this.initDevice()
   },
   methods: {
+    initUserInfo () {
+      if (!this.SNtoken) {
+        let cookie = getToken()
+        if (cookie) {
+          cookie = JSON.parse(cookie)
+          this.$store.commit('user/SET_TOKEN', cookie)
+        }
+      }
+    },
+    initDevice () {
+      const device = isMobile()
+      this.$store.commit('SET_DEVICE', !device)
+    },
     mouseenterHandler () {
       this.isfold = true
     },
