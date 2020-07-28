@@ -33,6 +33,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { ARTICLE_LIST } from '../api'
+import { desEncrypt, desDecrypt } from '~/utils/crypto'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
 import MainCard from '~/components/card/MainCard'
@@ -69,8 +70,13 @@ export default {
       'isPC'
     ])
   },
-  mounted () {
-    // console.log(this.menus)
+  async mounted () {
+    const { data: key } = await this.$axios.get('v1/token/code')
+    const res = await this.$axios.post('v1/token/decode', {
+      data: desEncrypt('哈哈 hehe hihi 哈喽', key)
+    })
+    console.log('加密结果：', desEncrypt(res.data.decode, key))
+    console.log('解密结果：', desDecrypt(res.data.raw, key))
   }
 }
 </script>
