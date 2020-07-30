@@ -69,6 +69,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import { LOGIN_URL } from '../api'
+import { desEncryptPlainObject } from '~/utils/crypto'
+
 export default {
   data () {
     const checkUser = (rule, value, callback) => {
@@ -95,16 +97,16 @@ export default {
 
     return {
       ruleForm: {
-        secret: 'admin',
-        account: ''
+        account: '',
+        secret: ''
         // vcode: ''
       },
       rules: {
-        secret: [
-          { validator: validatePass, trigger: 'blur' }
-        ],
         account: [
           { validator: checkUser, trigger: 'blur' }
+        ],
+        secret: [
+          { validator: validatePass, trigger: 'blur' }
         ]
         // vcode: [
         //   { validator: validateCode, trigger: 'blur'}
@@ -114,21 +116,27 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isPC'
+      'isPC',
+      'key'
     ])
   },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          this.ruleForm.type = 100
-          const res = await this.$axios.post(LOGIN_URL, this.ruleForm)
+          const formData = desEncryptPlainObject(this.ruleForm, this.key)
+          formData.type = 100
+
+          const res = await this.$axios.post(LOGIN_URL, formData)
           if (res.error_code === 0) {
             const { data } = res
             this.$store.dispatch('user/Login', data)
             this.$router.replace('/')
           } else if (res.error_code === 1002 || res.error_code === 1003) {
-            alert(res.msg)
+            this.$notify({
+              title: res.msg,
+              type: 'error'
+            })
           }
         } else {
           // console.log('error submit!!')

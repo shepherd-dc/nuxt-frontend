@@ -51,9 +51,18 @@ function desDecrypt (ciphertext, key) {
   return decrypted.toString(CryptoJS.enc.Utf8)
 }
 
+function desEncryptPlainObject (obj, key) {
+  const data = {}
+  Object.keys(obj).forEach((prop) => {
+    data[prop] = desEncrypt(obj[prop], key)
+  })
+  return data
+}
+
 export {
   aesEncrypt,
   aesDecrypt,
   desEncrypt,
-  desDecrypt
+  desDecrypt,
+  desEncryptPlainObject
 }

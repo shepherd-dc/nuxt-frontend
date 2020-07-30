@@ -1,7 +1,8 @@
-const API_VERSION = process.env.API_VERSION
+import { parseUrl } from './index'
 
-export const REGISTER_URL = `/${API_VERSION}/client/register`
-export const CHECK_NICKNAME = `/${API_VERSION}/user/nickname`
-export const CHECK_EMAIL = `/${API_VERSION}/user/email`
-export const LOGIN_URL = `/${API_VERSION}/token`
-export const TOKEN_INFO = `/${API_VERSION}/token/secret`
+export const REGISTER_URL = parseUrl('/client/register')
+export const CHECK_NICKNAME = parseUrl('/user/nickname')
+export const CHECK_EMAIL = parseUrl('/user/email')
+export const LOGIN_URL = parseUrl('/token')
+export const TOKEN_INFO = parseUrl('/token/secret')
+export const TOKEN_KEY = parseUrl('/token/code')

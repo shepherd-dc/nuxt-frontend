@@ -85,6 +85,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { REGISTER_URL, CHECK_NICKNAME, CHECK_EMAIL } from '../api'
+import { desEncrypt, desEncryptPlainObject } from '~/utils/crypto'
 
 export default {
   data () {
@@ -93,7 +94,7 @@ export default {
         return callback(new Error('昵称不能为空'))
       } else {
         const res = await this.$axios.post(CHECK_NICKNAME, {
-          nickname: this.ruleForm.nickname
+          nickname: desEncrypt(this.ruleForm.nickname, this.key)
         })
         if (res.error_code === 0) {
           callback()
@@ -107,7 +108,7 @@ export default {
         return callback(new Error('邮箱不能为空'))
       } else {
         const res = await this.$axios.post(CHECK_EMAIL, {
-          email: this.ruleForm.account
+          email: desEncrypt(this.ruleForm.account, this.key)
         })
         if (res.error_code === 0) {
           callback()
@@ -163,7 +164,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isPC'
+      'isPC',
+      'key'
     ])
   },
   methods: {
@@ -171,8 +173,9 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           delete this.ruleForm.checkPass
-          this.ruleForm.type = 100
-          const res = await this.$axios.post(REGISTER_URL, this.ruleForm)
+          const formData = desEncryptPlainObject(this.ruleForm, this.key)
+          formData.type = 100
+          const res = await this.$axios.post(REGISTER_URL, formData)
           if (res.error_code === 0) {
             this.$router.replace('/login')
           }

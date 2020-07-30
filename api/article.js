@@ -1,5 +1,5 @@
-const API_VERSION = process.env.API_VERSION
+import { parseUrl } from './index'
 
-export const ARTICLE_LIST = `/${API_VERSION}/article`
-export const ARTICLE_DETAIL = `/${API_VERSION}/article`
-export const ARTICLE_PUBLISH = `/${API_VERSION}/article/publish`
+export const ARTICLE_LIST = parseUrl('/article')
+export const ARTICLE_DETAIL = parseUrl('/article')
+export const ARTICLE_PUBLISH = parseUrl('/article/publish')

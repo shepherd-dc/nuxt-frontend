@@ -1,5 +1,5 @@
-const API_VERSION = process.env.API_VERSION
+import { parseUrl } from './index'
 
-export const MENU_LIST = `/${API_VERSION}/menu`
-export const MENU_DETAIL = `/${API_VERSION}/menu/detail`
-export const MENU_SUBMENU = `/${API_VERSION}/menu/submenu`
+export const MENU_LIST = parseUrl('/menu')
+export const MENU_DETAIL = parseUrl('/menu/detail')
+export const MENU_SUBMENU = parseUrl('/menu/submenu')

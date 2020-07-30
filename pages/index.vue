@@ -32,7 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ARTICLE_LIST } from '../api'
+import { ARTICLE_LIST, MENU_LIST } from '../api'
 import { desEncrypt, desDecrypt } from '~/utils/crypto'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
@@ -45,6 +45,10 @@ export default {
     // VueSwiper,
     MainCard,
     AsideCard
+  },
+  async fetch ({ app }) {
+    const { data } = await app.$axios.get(MENU_LIST)
+    await app.store.commit('ADD_MENUS', data)
   },
   async asyncData ({ $axios }) {
     const res = await $axios.get(ARTICLE_LIST)
@@ -60,10 +64,6 @@ export default {
       title1: '最新'
     }
   },
-  // async fetch ({ app }) {
-  //   let { data } = await app.$axios.get(`v1/menu`)
-  //   await app.store.commit('ADD_MENUS', data)
-  // },
   computed: {
     ...mapGetters([
       'menus',
