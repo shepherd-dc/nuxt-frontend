@@ -34,6 +34,10 @@ import Logo from '~/components/Logo.vue'
 export default {
   components: {
     Logo
+  },
+  async asyncData ({ $axios, env }) {
+    const res = await $axios.get('/v1/article')
+    console.log(res)
   }
 }
 </script>

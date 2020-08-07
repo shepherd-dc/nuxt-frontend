@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
+require('dotenv').config()
 
 const app = new Koa()
 
@@ -25,6 +26,7 @@ async function start () {
   }
 
   app.use((ctx) => {
+    consola.info(ctx.request)
     ctx.status = 200
     ctx.respond = false // Bypass Koa's built-in response handling
     ctx.req.ctx = ctx // This might be useful later on, e.g. in nuxtServerInit or with nuxt-stash
