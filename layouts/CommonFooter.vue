@@ -1,6 +1,9 @@
 <template>
   <div class="footer">
-    <p>Copyright © 2018 shepherdnet.top 鄂ICP备18021164号-1</p>
+    <p>
+      <span>Copyright © 2020 shepherdnet.top</span>
+      <a class="link" target="_blank" href="https://beian.miit.gov.cn/">鄂ICP备2020019254号-1</a>
+    </p>
   </div>
 </template>
 
@@ -18,5 +21,11 @@ export default {
     line-height: 60px;
     color: #fff;
     margin-top: 20px;
+    .link {
+      &:hover {
+        color: #41b883;
+        text-decoration: underline;
+      }
+    }
   }
 </style>
