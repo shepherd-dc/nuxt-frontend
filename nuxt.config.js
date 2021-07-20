@@ -82,6 +82,14 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    extractCSS: { allChunks: true },
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000
+      }
+    },
+    analyze: true,
     transpile: [/^element-ui/],
     /*
     ** You can extend webpack config here
