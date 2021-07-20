@@ -15,7 +15,7 @@
       </el-button>
     </div>
     <div class="text item">
-      <el-row>
+      <el-row :gutter="10">
         <el-col
           v-for="(item, index) in card_data.submenu"
           :key="index"

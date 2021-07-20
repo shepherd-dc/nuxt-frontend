@@ -7,3 +7,4 @@ export function parseUrl (url) {
 export * from './user'
 export * from './menu'
 export * from './article'
+export * from './comment'
