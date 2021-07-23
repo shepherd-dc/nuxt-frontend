@@ -82,7 +82,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    extractCSS: { allChunks: true },
+    // extractCSS: { allChunks: true },
     optimization: {
       splitChunks: {
         minSize: 10000,

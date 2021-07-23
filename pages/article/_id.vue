@@ -30,6 +30,7 @@
               class="article"
               v-html="article.content"
             />
+            <MediaOperation @on-comment="handleCommentClick" />
           </div>
         </el-card>
         <el-card class="box-card">
@@ -55,6 +56,7 @@ import { mapGetters } from 'vuex'
 import AsideCard from '~/components/card/AsideCard'
 import CommentList from '~/components/list/CommentList'
 import CommentTextarea from '~/components/CommentTextarea'
+import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
 import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT } from '~/api'
 
@@ -63,7 +65,8 @@ export default {
     AsideCard,
     AuthorInfo,
     CommentList,
-    CommentTextarea
+    CommentTextarea,
+    MediaOperation
   },
   async asyncData ({ $axios, params }) {
     let articleData = {}
@@ -106,7 +109,7 @@ export default {
     ]),
     authorInfo () {
       return {
-        name: this.article.author || '佚名',
+        name: this.article.author || this.article.user_name || '佚名',
         avatar: this.article.avatar,
         date: this.article.create_time || this.article.updatetime
       }
@@ -141,7 +144,7 @@ export default {
       if (!content) {
         this.$message({
           showClose: true,
-          message: '请填写评论',
+          message: '请填写评论内容',
           type: 'warning'
         })
         return
@@ -161,6 +164,9 @@ export default {
         const { data } = commentsRes
         this.comments = data
       }
+    },
+    handleCommentClick () {
+      this.$refs.commentTextarea.focus()
     }
   }
 }
@@ -188,6 +194,9 @@ export default {
   }
   .article-content {
     padding: 30px;
+    .article {
+      margin-bottom: 30px;
+    }
     p {
       // margin-bottom: 12px;
       font-family: "MicroSoft Yahei";

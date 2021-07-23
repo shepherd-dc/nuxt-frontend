@@ -1,9 +1,10 @@
 <template>
   <div class="comment-textarea">
-    <el-avatar :size="50" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <el-avatar :size="avatarSize" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
     <div class="comment-textarea__right">
       <div class="align-box">
         <el-input
+          ref="inputTextarea"
           v-model="textarea"
           type="textarea"
           placeholder="请输入评论"
@@ -34,6 +35,10 @@
 <script>
 export default {
   props: {
+    avatarSize: {
+      type: Number,
+      default: 50
+    },
     authorInfo: {
       type: Object,
       default: () => ({})
@@ -59,6 +64,9 @@ export default {
     clear () {
       this.textarea = ''
       this.showButtons = false
+    },
+    focus () {
+      this.$refs.inputTextarea.focus()
     }
   }
 }
@@ -66,6 +74,7 @@ export default {
 
 <style lang="less" scoped>
   .comment-textarea {
+    margin-top: 10px;
     display: flex;
     &__right {
       flex: 1;
@@ -76,6 +85,7 @@ export default {
       margin-left: 10px;
       .align-box {
         width: 100%;
+        min-width: 750px;
       }
     }
   }
