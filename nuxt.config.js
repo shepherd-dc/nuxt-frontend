@@ -45,7 +45,8 @@ module.exports = {
       src: '~plugins/axios.js',
       ssr: true
     },
-    '~plugins/filters.js'
+    '~plugins/filters.js',
+    '~plugins/bus.js'
   ],
   /*
   ** Nuxt.js dev-modules

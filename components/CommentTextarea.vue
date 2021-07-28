@@ -1,6 +1,8 @@
 <template>
   <div class="comment-textarea">
-    <el-avatar :size="avatarSize" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <div class="comment-textarea__avatar" :style="{width: avatarSize + 'px'}">
+      <el-avatar :size="avatarSize" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    </div>
     <div class="comment-textarea__right">
       <div class="align-box">
         <el-input
@@ -56,6 +58,7 @@ export default {
       this.showButtons = true
     },
     onCancel () {
+      this.$emit('cancel')
       this.showButtons = false
     },
     onSubmit () {
@@ -85,7 +88,6 @@ export default {
       margin-left: 10px;
       .align-box {
         width: 100%;
-        min-width: 750px;
       }
     }
   }

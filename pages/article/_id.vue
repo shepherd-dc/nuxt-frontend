@@ -34,7 +34,7 @@
           </div>
         </el-card>
         <el-card class="box-card">
-          <CommentTextarea ref="commentTextarea" @focus="handleFocus" @submit="handleCommentSubmit" />
+          <CommentTextarea ref="commentTextarea" @submit="handleCommentSubmit" />
         </el-card>
         <CommentList :comments="comments" />
       </el-col>
@@ -68,7 +68,8 @@ export default {
     CommentTextarea,
     MediaOperation
   },
-  async asyncData ({ $axios, params }) {
+  async asyncData ({ $axios, params, app }) {
+    // console.log('$bus', app.$bus)
     let articleData = {}
     let articlesData = []
     let comments = {}
@@ -76,7 +77,6 @@ export default {
     if (article.error_code === 0) {
       const { data } = article
       articleData = data
-      console.log('articleData', articleData)
     }
     const articles = await $axios.get(ARTICLE_LIST)
     if (articles.error_code === 0) {
@@ -115,6 +115,11 @@ export default {
       }
     }
   },
+  created () {
+    this.$bus.$on('updateComments', () => {
+      this.getComments()
+    })
+  },
   mounted () {
     // console.log(process.env.NODE_ENV, this.menu)
   },
@@ -128,9 +133,6 @@ export default {
       this.$router.push({
         path: `/column/${this.menu}/${this.submenuBread}`
       })
-    },
-    handleFocus () {
-      // console.log('token', this.SNtoken)
     },
     async handleCommentSubmit (content) {
       if (!this.SNtoken) {
@@ -173,7 +175,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import '../../assets/styles/cover.less';
   .article-detail {
     padding-top: 80px;
     max-width: 1280px;

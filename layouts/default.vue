@@ -17,7 +17,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+@import '../assets/styles/cover.less';
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;

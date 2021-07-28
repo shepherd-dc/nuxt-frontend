@@ -4,7 +4,7 @@
       <div class="comment-header">
         全部评论<span>（{{ comments.total }}）</span>
       </div>
-      <div v-for="c in comments.data" :key="c.id" class="text item">
+      <div v-for="c in comments.data" :key="c.id">
         <CommentItem :comment="c" />
       </div>
     </el-card>

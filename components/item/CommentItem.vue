@@ -1,7 +1,9 @@
 <template>
   <div class="comment-item">
     <div class="author-info">
-      <el-avatar :size="44" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+      <div class="author-info__avatar">
+        <el-avatar class="author-info__avatar" :size="44" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+      </div>
       <div class="author-info__right">
         <div class="align-box">
           <div class="name">
@@ -14,11 +16,10 @@
             <p class="comment-content" v-html="comment.content" />
           </div>
           <MediaOperation is-reply @on-reply="handleReply" />
-          <!-- {{ comment }} -->
-          <CommentTextarea v-show="showTextarea" ref="commentTextarea" :avatar-size="40" @submit="replyComment" />
-          <div v-if="comment.replies.length" class="replies-container">
-            <ReplyList :replies="comment.replies" />
-          </div>
+          <CommentTextarea v-show="showTextarea" ref="commentTextarea" :avatar-size="40" @submit="replyComment" @cancel="showTextarea=false" />
+        </div>
+        <div v-if="comment.replies.length" class="replies-container">
+          <ReplyList :replies="comment.replies" />
         </div>
       </div>
     </div>
@@ -57,6 +58,9 @@ export default {
   methods: {
     handleReply () {
       this.showTextarea = !this.showTextarea
+      this.$nextTick(() => {
+        this.$refs.commentTextarea.focus()
+      })
     },
     async replyComment (content) {
       // console.log('this.SNtoken', this.SNtoken)
@@ -88,8 +92,8 @@ export default {
       const res = await this.$axios.post(REPLY_SUBMIT, formData)
       if (res.error_code === 0) {
         this.$refs.commentTextarea.clear()
-        // TODO: updateComment
-        console.log('updateComment', res)
+        this.showTextarea = false
+        this.$bus.$emit('updateComments')
       }
     }
   }
@@ -103,10 +107,11 @@ export default {
   }
   .author-info {
     display: flex;
+    &__avatar {
+      width: 44px;
+    }
     &__right {
       flex: 1;
-      display: flex;
-      align-items: center;
       text-align: left;
       line-height: 1.5;
       margin-left: 10px;

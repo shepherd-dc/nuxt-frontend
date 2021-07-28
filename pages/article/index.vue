@@ -141,7 +141,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import '../../assets/styles/cover.less';
   .detail {
     padding-top: 80px;
     max-width: 1280px;

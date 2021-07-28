@@ -163,8 +163,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../assets/styles/cover.less';
-
 .box-card {
   margin-bottom: 10px;
 }

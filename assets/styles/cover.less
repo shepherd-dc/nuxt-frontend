@@ -1,31 +1,34 @@
-/deep/.el-breadcrumb {
-  line-height: 22px;
-}
-/deep/.el-button--text {
-  color:#41b883;
-}
-/deep/.el-breadcrumb__inner.is-link:hover, .el-breadcrumb__inner a:hover {
-  color: #41b883;
-}
-.item {
-cursor: pointer;
-margin-bottom: 18px;
-&:hover {
-  color: #41b883;
-}
+#__layout {
+  .el-breadcrumb {
+    line-height: 22px;
+  }
+  .el-button--text {
+    color:#41b883;
+  }
+  .el-breadcrumb__inner.is-link:hover, .el-breadcrumb__inner a:hover {
+    color: #41b883;
+  }
+  .item {
+  cursor: pointer;
+  margin-bottom: 18px;
+  &:hover {
+    color: #41b883;
+  }
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+  .text {
+    font-size: 14px;
+  }
 }
 
-/deep/.clearfix:before,
-/deep/.clearfix:after {
-  display: table;
-  content: "";
-}
-/deep/.clearfix:after {
-  clear: both
-}
-.text {
-  font-size: 14px;
-}
 pre.ql-syntax {
   // background-color: #f6f8fa;
   background-color: #23241f;
