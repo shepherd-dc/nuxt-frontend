@@ -8,7 +8,7 @@
         </div>
         <div class="desc">
           <span class="date">{{ authorInfo.date }}</span>
-          <i class="el-icon-view" /><span class="view-num">1024</span>
+          <i class="el-icon-view" /><span class="view-num">{{ authorInfo.views }}</span>
         </div>
       </div>
     </div>

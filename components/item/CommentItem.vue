@@ -7,19 +7,19 @@
       <div class="author-info__right">
         <div class="align-box">
           <div class="name">
-            {{ comment.from_name }}
+            {{ commentDetail.from_name }}
           </div>
           <div class="desc">
-            <span class="date">{{ comment.create_time }}</span>
+            <span class="date">{{ commentDetail.create_time }}</span>
           </div>
           <div class="comment">
-            <p class="comment-content" v-html="comment.content" />
+            <p class="comment-content" v-html="commentDetail.content" />
           </div>
-          <MediaOperation is-reply @on-reply="handleReply" />
+          <MediaOperation :media-info="mediaInfo" is-reply @on-reply="handleReply" @on-like="handleLikeCallback" />
           <CommentTextarea v-show="showTextarea" ref="commentTextarea" :avatar-size="40" @submit="replyComment" @cancel="showTextarea=false" />
         </div>
-        <div v-if="comment.replies.length" class="replies-container">
-          <ReplyList :replies="comment.replies" />
+        <div v-if="commentDetail.replies.length" class="replies-container">
+          <ReplyList :replies="commentDetail.replies" />
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import ReplyList from '~/components/list/ReplyList'
-import { REPLY_SUBMIT } from '~/api'
+import { REPLY_SUBMIT, COMMENT_LIKE, COMMENT_DETAIL } from '~/api'
 
 export default {
   components: {
@@ -47,13 +47,35 @@ export default {
   },
   data () {
     return {
-      showTextarea: false
+      commentDetail: this.comment,
+      showTextarea: false,
+      isLiked: 0,
+      isStared: 0
     }
   },
   computed: {
     ...mapGetters([
       'SNtoken'
-    ])
+    ]),
+    mediaInfo () {
+      return {
+        likes: this.commentDetail.likes,
+        replies: this.commentDetail.replies.length,
+        type: 'comment',
+        type_id: this.commentDetail.id,
+        isLiked: this.isLiked
+      }
+    }
+  },
+  watch: {
+    comment (v) {
+      this.commentDetail = v
+    }
+  },
+  mounted () {
+    if (this.SNtoken) {
+      this.getLike()
+    }
   },
   methods: {
     handleReply () {
@@ -82,12 +104,12 @@ export default {
       }
       const formData = {}
       formData.reply_type = 'comment'
-      formData.topic_id = this.comment.topic_id
-      formData.topic_type = this.comment.topic_type
+      formData.topic_id = this.commentDetail.topic_id
+      formData.topic_type = this.commentDetail.topic_type
       formData.content = content
-      formData.comment_id = this.comment.id
-      formData.to_uid = this.comment.from_uid
-      formData.to_name = this.comment.from_name
+      formData.comment_id = this.commentDetail.id
+      formData.to_uid = this.commentDetail.from_uid
+      formData.to_name = this.commentDetail.from_name
       // console.log(formData)
       const res = await this.$axios.post(REPLY_SUBMIT, formData)
       if (res.error_code === 0) {
@@ -95,6 +117,24 @@ export default {
         this.showTextarea = false
         this.$bus.$emit('updateComments')
       }
+    },
+    async getComment () {
+      const commentRes = await this.$axios.get(`${COMMENT_DETAIL}/${this.commentDetail.id}`)
+      if (commentRes.error_code === 0) {
+        const { data } = commentRes
+        this.commentDetail = data
+      }
+    },
+    async getLike () {
+      const likeRes = await this.$axios.get(`${COMMENT_LIKE}/${this.commentDetail.id}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.isLiked = data.is_liked
+      }
+    },
+    handleLikeCallback () {
+      this.getComment()
+      this.getLike()
     }
   }
 }

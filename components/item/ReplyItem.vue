@@ -7,17 +7,17 @@
       <div class="reply-author-info__right">
         <div class="align-box">
           <div class="name">
-            <span>{{ reply.from_name }}</span>
+            <span>{{ replyDetail.from_name }}</span>
             <span class="reply-object">回复</span>
-            <span>{{ reply.to_name }}</span>
+            <span>{{ replyDetail.to_name }}</span>
           </div>
           <div class="desc">
-            <span class="date">{{ reply.create_time }}</span>
+            <span class="date">{{ replyDetail.create_time }}</span>
           </div>
           <div class="reply">
-            <p class="reply-content" v-html="reply.content" />
+            <p class="reply-content" v-html="replyDetail.content" />
           </div>
-          <MediaOperation is-reply @on-reply="handleReply" />
+          <MediaOperation :media-info="mediaInfo" is-reply @on-reply="handleReply" @on-like="handleLikeCallback" />
           <CommentTextarea v-show="showTextarea" ref="commentTextarea" :avatar-size="40" @submit="replyReply" @cancel="showTextarea=false" />
         </div>
       </div>
@@ -29,7 +29,7 @@
 import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
-import { REPLY_SUBMIT } from '~/api'
+import { REPLY_SUBMIT, REPLY_LIKE, REPLY_DETAIL } from '~/api'
 
 export default {
   components: {
@@ -44,13 +44,33 @@ export default {
   },
   data () {
     return {
-      showTextarea: false
+      replyDetail: this.reply,
+      showTextarea: false,
+      isLiked: 0
     }
   },
   computed: {
     ...mapGetters([
       'SNtoken'
-    ])
+    ]),
+    mediaInfo () {
+      return {
+        likes: this.replyDetail.likes,
+        type: 'reply',
+        type_id: this.replyDetail.id,
+        isLiked: this.isLiked
+      }
+    }
+  },
+  watch: {
+    reply (v) {
+      this.replyDetail = v
+    }
+  },
+  mounted () {
+    if (this.SNtoken) {
+      this.getLike()
+    }
   },
   methods: {
     handleReply () {
@@ -60,7 +80,7 @@ export default {
       })
     },
     async replyReply (content) {
-      console.log('this.SNtoken', this.SNtoken)
+      // console.log('this.SNtoken', this.SNtoken)
       if (!this.SNtoken) {
         this.$message({
           showClose: true,
@@ -79,13 +99,13 @@ export default {
       }
       const formData = {}
       formData.reply_type = 'reply'
-      formData.topic_id = this.reply.topic_id
-      formData.topic_type = this.reply.topic_type
+      formData.topic_id = this.replyDetail.topic_id
+      formData.topic_type = this.replyDetail.topic_type
       formData.content = content
-      formData.comment_id = this.reply.comment_id
-      formData.reply_id = this.reply.id
-      formData.to_uid = this.reply.from_uid
-      formData.to_name = this.reply.from_name
+      formData.comment_id = this.replyDetail.comment_id
+      formData.reply_id = this.replyDetail.id
+      formData.to_uid = this.replyDetail.from_uid
+      formData.to_name = this.replyDetail.from_name
       console.log(formData)
       const res = await this.$axios.post(REPLY_SUBMIT, formData)
       if (res.error_code === 0) {
@@ -93,6 +113,24 @@ export default {
         this.showTextarea = false
         this.$bus.$emit('updateComments')
       }
+    },
+    async getReply () {
+      const replyRes = await this.$axios.get(`${REPLY_DETAIL}/${this.replyDetail.id}`)
+      if (replyRes.error_code === 0) {
+        const { data } = replyRes
+        this.replyDetail = data
+      }
+    },
+    async getLike () {
+      const likeRes = await this.$axios.get(`${REPLY_LIKE}/${this.replyDetail.id}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.isLiked = data.is_liked
+      }
+    },
+    handleLikeCallback () {
+      this.getReply()
+      this.getLike()
     }
   }
 }

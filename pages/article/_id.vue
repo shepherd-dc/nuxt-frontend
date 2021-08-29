@@ -30,7 +30,7 @@
               class="article"
               v-html="article.content"
             />
-            <MediaOperation @on-comment="handleCommentClick" />
+            <MediaOperation :media-info="mediaInfo" @on-comment="handleCommentClick" @on-like="handleLikeCallback" @on-star="handleStarCallback" />
           </div>
         </el-card>
         <el-card class="box-card">
@@ -43,8 +43,8 @@
         :span="6"
       >
         <aside-card
-          :aside_title="title1"
-          :aside_data="articles_data"
+          :aside_title="asideTitle"
+          :aside_data="articlesData"
         />
       </el-col>
     </el-row>
@@ -58,7 +58,7 @@ import CommentList from '~/components/list/CommentList'
 import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
-import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT } from '~/api'
+import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
 
 export default {
   components: {
@@ -93,13 +93,15 @@ export default {
       menuBread: articleData.menu_name,
       submenuBread: articleData.column_name,
       menu: articleData.en_name,
-      articles_data: articlesData,
+      articlesData,
       comments
     }
   },
   data () {
     return {
-      title1: '最新'
+      asideTitle: '最新',
+      isLiked: 0,
+      isStared: 0
     }
   },
   computed: {
@@ -111,7 +113,19 @@ export default {
       return {
         name: this.article.author || this.article.user_name || '佚名',
         avatar: this.article.avatar,
-        date: this.article.create_time || this.article.updatetime
+        date: this.article.create_time || this.article.updatetime,
+        views: this.article.views
+      }
+    },
+    mediaInfo () {
+      return {
+        likes: this.article.likes,
+        stars: this.article.stars,
+        comments: this.comments.total,
+        type: 'article',
+        type_id: this.article.id,
+        isLiked: this.isLiked,
+        isStared: this.isStared
       }
     }
   },
@@ -121,7 +135,10 @@ export default {
     })
   },
   mounted () {
-    // console.log(process.env.NODE_ENV, this.menu)
+    if (this.SNtoken) {
+      this.getLike()
+      this.getStar()
+    }
   },
   methods: {
     routerBreadMenu () {
@@ -167,8 +184,37 @@ export default {
         this.comments = data
       }
     },
+    async getActicle () {
+      const articleRes = await this.$axios.get(`${ARTICLE_DETAIL}/${this.article.id}`)
+      if (articleRes.error_code === 0) {
+        const { data } = articleRes
+        this.article = data
+      }
+    },
+    async getLike () {
+      const likeRes = await this.$axios.get(`${ARTICLE_LIKE}/${this.article.id}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.isLiked = data.is_liked
+      }
+    },
+    async getStar () {
+      const starRes = await this.$axios.get(`${ARTICLE_STAR}/${this.article.id}`)
+      if (starRes.error_code === 0) {
+        const { data } = starRes
+        this.isStared = data.is_stared
+      }
+    },
     handleCommentClick () {
       this.$refs.commentTextarea.focus()
+    },
+    handleLikeCallback () {
+      this.getActicle()
+      this.getLike()
+    },
+    handleStarCallback () {
+      this.getActicle()
+      this.getStar()
     }
   }
 }

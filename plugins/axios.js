@@ -10,6 +10,7 @@ export default function ({ $axios, redirect }) {
     let cookie = getToken()
     if (cookie) {
       cookie = JSON.parse(cookie)
+      config.headers['SN-Token'] = cookie.token
       config.auth = {}
       config.auth.username = cookie.token
     }
@@ -28,9 +29,13 @@ export default function ({ $axios, redirect }) {
   })
 
   $axios.onError((error) => {
+    // console.error('Server error:', error)
     const code = parseInt(error.response && error.response.status)
     if (code === 400) {
       redirect('/400')
+    }
+    if (code === 401) {
+      // redirect('/login')
     }
   })
 }
