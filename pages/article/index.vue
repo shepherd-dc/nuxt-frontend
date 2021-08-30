@@ -62,7 +62,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ARTICLE_LIST } from '~/api'
+import { ARTICLE_LIST, ARTICLE_VIEW } from '~/api'
 
 import AsideCard from '~/components/card/AsideCard'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -132,6 +132,7 @@ export default {
       }
     },
     routerToDetail (id) {
+      this.$axios.get(`${ARTICLE_VIEW}/${id}`)
       this.$router.push({
         path: `/article/${id}`
       })

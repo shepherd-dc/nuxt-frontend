@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { ARTICLE_VIEW } from '~/api'
 export default {
   props: {
     articles_data: {
@@ -28,6 +29,7 @@ export default {
   },
   methods: {
     routerToDetail (id) {
+      this.$axios.get(`${ARTICLE_VIEW}/${id}`)
       this.$router.push({
         path: `/article/${id}`
       })

@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { ARTICLE_VIEW } from '~/api'
 export default {
   props: {
     aside_title: {
@@ -44,6 +45,7 @@ export default {
   },
   methods: {
     routerToDetail (id) {
+      this.$axios.get(`${ARTICLE_VIEW}/${id}`)
       this.$router.push({
         path: `/article/${id}`
       })

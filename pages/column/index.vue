@@ -16,6 +16,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { MENU_LIST } from '@/api'
 import Slogan from '~/components/Slogan'
 // import VueSwiper from '~/components/VueSwiper'
 import MainCard from '~/components/card/MainCard'
@@ -26,14 +27,14 @@ export default {
     // VueSwiper,
     MainCard
   },
+  async fetch ({ app }) {
+    const { data } = await app.$axios.get(MENU_LIST)
+    await app.store.commit('ADD_MENUS', data)
+  },
   data () {
     return {
     }
   },
-  // async fetch ({ app }) {
-  //   let { data } = await app.$axios.get(`/menu`)
-  //   await app.store.commit('ADD_MENUS', data)
-  // },
   computed: {
     ...mapGetters([
       'menus'
