@@ -21,6 +21,7 @@ function aesDecrypt (word) {
 
 // DES3加密方法
 function desEncrypt (message, key) {
+  key = atob(key) // base64 decode
   key = CryptoJS.enc.Utf8.parse(key) // 将key转换成 wordArray
   const encrypted = CryptoJS.TripleDES.encrypt(message, key, {
     // iv: des3iv,
@@ -33,6 +34,7 @@ function desEncrypt (message, key) {
 
 // DES3解密方法
 function desDecrypt (ciphertext, key) {
+  key = atob(key)
   key = CryptoJS.enc.Utf8.parse(key)
   if (ciphertext === '' || ciphertext === null || ciphertext === undefined) {
     return ''

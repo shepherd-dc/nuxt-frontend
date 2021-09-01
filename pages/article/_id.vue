@@ -59,6 +59,7 @@ import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
 import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
+import { checkToken } from '@/utils/auth'
 
 export default {
   components: {
@@ -97,17 +98,24 @@ export default {
       comments
     }
   },
+  provide () {
+    return {
+      tokenInfo: this.tokenInfo
+    }
+  },
   data () {
     return {
       asideTitle: '最新',
       isLiked: 0,
-      isStared: 0
+      isStared: 0,
+      tokenInfo: {
+        valid: false
+      }
     }
   },
   computed: {
     ...mapGetters([
-      'isPC',
-      'SNtoken'
+      'isPC'
     ]),
     authorInfo () {
       return {
@@ -134,8 +142,10 @@ export default {
       this.getComments()
     })
   },
-  mounted () {
-    if (this.SNtoken) {
+  async mounted () {
+    const res = await checkToken(this)
+    if (res.valid) {
+      this.tokenInfo.valid = true
       this.getLike()
       this.getStar()
     }

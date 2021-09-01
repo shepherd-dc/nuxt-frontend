@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import ReplyList from '~/components/list/ReplyList'
@@ -38,6 +37,11 @@ export default {
     MediaOperation,
     CommentTextarea,
     ReplyList
+  },
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
   },
   props: {
     comment: {
@@ -50,13 +54,11 @@ export default {
       commentDetail: this.comment,
       showTextarea: false,
       isLiked: 0,
-      isStared: 0
+      isStared: 0,
+      valid: this.tokenInfo.valid
     }
   },
   computed: {
-    ...mapGetters([
-      'SNtoken'
-    ]),
     mediaInfo () {
       return {
         likes: this.commentDetail.likes,
@@ -70,10 +72,19 @@ export default {
   watch: {
     comment (v) {
       this.commentDetail = v
+    },
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+        if (this.valid) {
+          this.getLike()
+        }
+      }
     }
   },
   mounted () {
-    if (this.SNtoken) {
+    if (this.valid) {
       this.getLike()
     }
   },

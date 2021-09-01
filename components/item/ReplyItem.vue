@@ -42,11 +42,17 @@ export default {
       default: () => ({})
     }
   },
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
+  },
   data () {
     return {
       replyDetail: this.reply,
       showTextarea: false,
-      isLiked: 0
+      isLiked: 0,
+      valid: this.tokenInfo.valid
     }
   },
   computed: {
@@ -65,10 +71,19 @@ export default {
   watch: {
     reply (v) {
       this.replyDetail = v
+    },
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+        if (this.valid) {
+          this.getLike()
+        }
+      }
     }
   },
   mounted () {
-    if (this.SNtoken) {
+    if (this.valid) {
       this.getLike()
     }
   },

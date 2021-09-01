@@ -1,77 +1,74 @@
 <template>
   <div class="login">
-    <el-row>
-      <el-col
-        :span="isPC ? 6 : 24"
-        :offset="isPC ? 9 : 0"
+    <el-card class="box-card" :class="isPC ? 'pc-login-box' : ''">
+      <div
+        slot="header"
+        class="clearfix login-head"
       >
-        <el-card class="box-card">
-          <div
-            slot="header"
-            class="clearfix login-head"
+        <span>登录</span>
+      </div>
+      <div class="item-body">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item
+            label="用户名"
+            prop="account"
           >
-            <span>登录</span>
-          </div>
-          <div class="item-body">
-            <el-form
-              ref="ruleForm"
-              :model="ruleForm"
-              :rules="rules"
-              label-width="100px"
-              class="demo-ruleForm"
-            >
-              <el-form-item
-                label="用户名"
-                prop="account"
-              >
-                <el-input
-                  v-model="ruleForm.account"
-                  placeholder="请输入用户名或邮箱"
-                />
-              </el-form-item>
-              <el-form-item
-                label="密码"
-                prop="secret"
-              >
-                <el-input
-                  v-model="ruleForm.secret"
-                  type="password"
-                  placeholder="请输入密码"
-                  autocomplete="off"
-                />
-              </el-form-item>
-              <!-- <el-form-item
+            <el-input
+              v-model="ruleForm.account"
+              placeholder="请输入用户名或邮箱"
+            />
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            prop="secret"
+          >
+            <el-input
+              v-model="ruleForm.secret"
+              type="password"
+              placeholder="请输入密码"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <!-- <el-form-item
                 label="验证码"
                 prop="vcode">
                 <el-input
                   v-model="ruleForm.vcode"
                   placeholder="请输入验证码"></el-input>
               </el-form-item> -->
-              <el-form-item>
-                <el-button
-                  type="success"
-                  @click="submitForm('ruleForm')"
-                >
-                  提交
-                </el-button>
-                <el-button @click="resetForm('ruleForm')">
-                  重置
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+          <el-form-item>
+            <el-button
+              type="success"
+              @click="submitForm('ruleForm')"
+            >
+              提交
+            </el-button>
+            <el-button @click="resetForm('ruleForm')">
+              重置
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { LOGIN_URL } from '../api'
+import { LOGIN_URL, MENU_LIST } from '../api'
 import { desEncryptPlainObject } from '~/utils/crypto'
 
 export default {
+  async fetch ({ app }) {
+    const { data } = await app.$axios.get(MENU_LIST)
+    await app.store.commit('ADD_MENUS', data)
+  },
   data () {
     const checkUser = (rule, value, callback) => {
       if (!value) {
@@ -152,6 +149,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .login {
+    padding: 60px 10px;
+  }
+  .pc-login-box {
+    min-width: 360px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
   .box-card {
     margin-top: 60px;
     .login-head {

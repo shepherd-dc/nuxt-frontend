@@ -1,93 +1,90 @@
 <template>
   <div class="register">
-    <el-row>
-      <el-col
-        :span="isPC ? 6 : 24"
-        :offset="isPC ? 9 : 0"
+    <el-card class="box-card" :class="isPC ? 'pc-register-box' : ''">
+      <div
+        slot="header"
+        class="clearfix login-head"
       >
-        <el-card class="box-card">
-          <div
-            slot="header"
-            class="clearfix login-head"
+        <span>注册</span>
+      </div>
+      <div class="item-body">
+        <el-form
+          ref="ruleForm"
+          :model="ruleForm"
+          :rules="rules"
+          status-icon
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item
+            prop="nickname"
+            label="昵称"
           >
-            <span>注册</span>
-          </div>
-          <div class="item-body">
-            <el-form
-              ref="ruleForm"
-              :model="ruleForm"
-              :rules="rules"
-              status-icon
-              label-width="100px"
-              class="demo-ruleForm"
+            <el-input
+              v-model="ruleForm.nickname"
+              placeholder="请输入昵称"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item
+            prop="account"
+            label="邮箱"
+          >
+            <el-input
+              v-model="ruleForm.account"
+              placeholder="请输入邮箱"
+              type="email"
+            />
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            prop="secret"
+          >
+            <el-input
+              v-model="ruleForm.secret"
+              placeholder="请输入密码"
+              type="password"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item
+            label="确认密码"
+            prop="checkPass"
+          >
+            <el-input
+              v-model="ruleForm.checkPass"
+              placeholder="请确认密码"
+              type="password"
+              autocomplete="off"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="success"
+              @click="submitForm('ruleForm')"
             >
-              <el-form-item
-                prop="nickname"
-                label="昵称"
-              >
-                <el-input
-                  v-model="ruleForm.nickname"
-                  placeholder="请输入昵称"
-                  type="text"
-                />
-              </el-form-item>
-              <el-form-item
-                prop="account"
-                label="邮箱"
-              >
-                <el-input
-                  v-model="ruleForm.account"
-                  placeholder="请输入邮箱"
-                  type="email"
-                />
-              </el-form-item>
-              <el-form-item
-                label="密码"
-                prop="secret"
-              >
-                <el-input
-                  v-model="ruleForm.secret"
-                  placeholder="请输入密码"
-                  type="password"
-                  autocomplete="off"
-                />
-              </el-form-item>
-              <el-form-item
-                label="确认密码"
-                prop="checkPass"
-              >
-                <el-input
-                  v-model="ruleForm.checkPass"
-                  placeholder="请确认密码"
-                  type="password"
-                  autocomplete="off"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="success"
-                  @click="submitForm('ruleForm')"
-                >
-                  提交
-                </el-button>
-                <el-button @click="resetForm('ruleForm')">
-                  重置
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+              提交
+            </el-button>
+            <el-button @click="resetForm('ruleForm')">
+              重置
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { REGISTER_URL, CHECK_NICKNAME, CHECK_EMAIL } from '../api'
+import { MENU_LIST, REGISTER_URL, CHECK_NICKNAME, CHECK_EMAIL } from '../api'
 import { desEncrypt, desEncryptPlainObject } from '~/utils/crypto'
 
 export default {
+  async fetch ({ app }) {
+    const { data } = await app.$axios.get(MENU_LIST)
+    await app.store.commit('ADD_MENUS', data)
+  },
   data () {
     const checkUser = async (rule, value, callback) => {
       if (!value) {
@@ -193,6 +190,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  .register {
+    padding: 60px 10px;
+  }
+  .pc-register-box {
+    min-width: 360px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
   .box-card {
     margin-top: 60px;
     .login-head {
