@@ -13,8 +13,8 @@
 
 <script>
 import { throttle } from 'lodash'
-import { mapGetters } from 'vuex'
 import { ARTICLE_LIKE, COMMENT_LIKE, REPLY_LIKE, ARTICLE_STAR } from '~/api'
+import { loginRequired } from '@/utils/auth'
 
 export default {
   props: {
@@ -27,16 +27,19 @@ export default {
       default: () => ({})
     }
   },
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
+  },
   data () {
     return {
       liked: 0,
-      stared: 0
+      stared: 0,
+      valid: this.tokenInfo.valid
     }
   },
   computed: {
-    ...mapGetters([
-      'SNtoken'
-    ]),
     replies () {
       if (this.mediaInfo.replies === undefined) { return '' }
       return this.mediaInfo.replies
@@ -66,6 +69,12 @@ export default {
         this.liked = v.isLiked
         this.stared = v.isStared
       }
+    },
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+      }
     }
   },
   methods: {
@@ -74,14 +83,8 @@ export default {
       this.$emit(eventName)
     },
     async like () {
-      if (!this.SNtoken) {
-        this.$message({
-          showClose: true,
-          message: '请登录后操作',
-          type: 'warning'
-        })
-        return
-      }
+      if (!loginRequired(this)) { return }
+
       if (this.liked) {
         this.$message({
           showClose: true,
@@ -103,6 +106,8 @@ export default {
       }
     },
     star: throttle(async function () {
+      if (!loginRequired(this)) { return }
+
       await this.starRequest()
       this.$emit('on-star')
       const message = this.stared ? '收藏成功' : '取消收藏成功'

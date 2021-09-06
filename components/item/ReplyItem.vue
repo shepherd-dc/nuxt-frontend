@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import { REPLY_SUBMIT, REPLY_LIKE, REPLY_DETAIL } from '~/api'
+import { loginRequired } from '@/utils/auth'
 
 export default {
   components: {
@@ -56,9 +56,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'SNtoken'
-    ]),
     mediaInfo () {
       return {
         likes: this.replyDetail.likes,
@@ -95,15 +92,8 @@ export default {
       })
     },
     async replyReply (content) {
-      // console.log('this.SNtoken', this.SNtoken)
-      if (!this.SNtoken) {
-        this.$message({
-          showClose: true,
-          message: '请登录后操作',
-          type: 'warning'
-        })
-        return
-      }
+      if (!loginRequired(this)) { return }
+
       if (!content) {
         this.$message({
           showClose: true,

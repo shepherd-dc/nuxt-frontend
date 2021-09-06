@@ -50,6 +50,7 @@
           <el-form-item
             label="确认密码"
             prop="checkPass"
+            class="margin-thin"
           >
             <el-input
               v-model="ruleForm.checkPass"
@@ -57,6 +58,10 @@
               type="password"
               autocomplete="off"
             />
+          </el-form-item>
+          <el-form-item class="margin-thin">
+            <span>已有账号？</span>
+            <span class="to-login" @click="toLogin">去登录</span>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -184,6 +189,9 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    toLogin () {
+      this.$router.replace('login')
     }
   }
 }
@@ -208,5 +216,12 @@ export default {
     .item-body {
       padding-right: 30px;
     }
+  }
+  .margin-thin {
+    margin: 10px 0;
+  }
+  .to-login {
+    color: #67C23A;
+    cursor: pointer;
   }
 </style>

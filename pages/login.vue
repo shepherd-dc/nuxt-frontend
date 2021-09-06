@@ -27,6 +27,7 @@
           <el-form-item
             label="密码"
             prop="secret"
+            class="margin-thin"
           >
             <el-input
               v-model="ruleForm.secret"
@@ -42,6 +43,10 @@
                   v-model="ruleForm.vcode"
                   placeholder="请输入验证码"></el-input>
               </el-form-item> -->
+          <el-form-item class="margin-thin">
+            <span>没有账号？</span>
+            <span class="to-register" @click="toRegister">去注册</span>
+          </el-form-item>
           <el-form-item>
             <el-button
               type="success"
@@ -115,7 +120,10 @@ export default {
     ...mapGetters([
       'isPC',
       'key'
-    ])
+    ]),
+    replacePath () {
+      return this.$route.push === '/login' || this.$route.push === '/register'
+    }
   },
   methods: {
     submitForm (formName) {
@@ -128,7 +136,11 @@ export default {
           if (res.error_code === 0) {
             const { data } = res
             this.$store.dispatch('user/Login', data)
-            this.$router.replace('/')
+            if (this.replacePath) {
+              this.$router.push('/')
+            } else {
+              this.$router.back()
+            }
           } else if (res.error_code === 1002 || res.error_code === 1003) {
             this.$notify({
               title: res.msg,
@@ -143,6 +155,9 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    toRegister () {
+      this.$router.replace('/register')
     }
   }
 }
@@ -167,5 +182,12 @@ export default {
     .item-body {
       padding-right: 30px;
     }
+  }
+  .margin-thin {
+    margin: 10px 0;
+  }
+  .to-register {
+    color: #67C23A;
+    cursor: pointer;
   }
 </style>

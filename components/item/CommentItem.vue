@@ -31,6 +31,7 @@ import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import ReplyList from '~/components/list/ReplyList'
 import { REPLY_SUBMIT, COMMENT_LIKE, COMMENT_DETAIL } from '~/api'
+import { loginRequired } from '@/utils/auth'
 
 export default {
   components: {
@@ -96,15 +97,7 @@ export default {
       })
     },
     async replyComment (content) {
-      // console.log('this.SNtoken', this.SNtoken)
-      if (!this.SNtoken) {
-        this.$message({
-          showClose: true,
-          message: '请登录后操作',
-          type: 'warning'
-        })
-        return
-      }
+      if (!loginRequired(this)) { return }
       if (!content) {
         this.$message({
           showClose: true,

@@ -59,7 +59,7 @@ import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
 import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
-import { checkToken } from '@/utils/auth'
+import { checkToken, loginRequired } from '@/utils/auth'
 
 export default {
   components: {
@@ -108,6 +108,7 @@ export default {
       asideTitle: '最新',
       isLiked: 0,
       isStared: 0,
+      valid: false,
       tokenInfo: {
         valid: false
       }
@@ -146,6 +147,7 @@ export default {
     const res = await checkToken(this)
     if (res.valid) {
       this.tokenInfo.valid = true
+      this.valid = true
       this.getLike()
       this.getStar()
     }
@@ -162,14 +164,7 @@ export default {
       })
     },
     async handleCommentSubmit (content) {
-      if (!this.SNtoken) {
-        this.$message({
-          showClose: true,
-          message: '请登录后操作',
-          type: 'warning'
-        })
-        return
-      }
+      if (!loginRequired(this)) { return }
       if (!content) {
         this.$message({
           showClose: true,
