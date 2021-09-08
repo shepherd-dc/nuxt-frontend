@@ -7,10 +7,14 @@
           type="flex"
         >
           <el-col :span="isPC ? 18 : 24">
-            <main-card
-              :card_data="card_data"
-              :islist="islist"
-            />
+            <template v-if="single">
+              <col-card :column_data="column_data" />
+            </template>
+
+            <template v-else>
+              <main-card :card_data="card_data" :islist="islist" />
+            </template>
+
             <article-list :articles_data="list" />
             <pagination
               v-show="total > 10"
@@ -39,6 +43,7 @@
 import { mapGetters } from 'vuex'
 import { ARTICLE_LIST } from '~/api'
 import MainCard from '~/components/card/MainCard'
+import ColCard from '~/components/card/ColCard'
 import AsideCard from '~/components/card/AsideCard'
 import ArticleList from '~/components/list/ArticleList'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -46,6 +51,7 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 export default {
   components: {
     MainCard,
+    ColCard,
     AsideCard,
     ArticleList,
     Pagination
@@ -53,15 +59,27 @@ export default {
   props: {
     card_data: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     articles_data: {
       type: Array,
-      default: () => {}
+      default: () => []
     },
     menu_id: {
       type: String,
       default: ''
+    },
+    single: {
+      type: Boolean,
+      default: false
+    },
+    column_id: {
+      type: String,
+      default: ''
+    },
+    column_data: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -73,7 +91,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        menu_id: this.menu_id
+        menu_id: '',
+        column_id: ''
       }
     }
   },
@@ -83,11 +102,16 @@ export default {
     ])
   },
   created () {
-    // this.list = [...this.articles_data]
     this.getList()
   },
   methods: {
     async getList () {
+      if (this.menu_id) {
+        this.listQuery.menu_id = this.menu_id
+      }
+      if (this.column_id) {
+        this.listQuery.column_id = this.column_id
+      }
       const res = await this.$axios.get(ARTICLE_LIST, {
         params: { ...this.listQuery }
       })

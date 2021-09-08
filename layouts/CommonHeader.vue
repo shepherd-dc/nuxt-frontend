@@ -41,13 +41,18 @@
         <span @click="routerToLogin()">登录</span> |
         <span @click="routerToRegister()">注册</span>
       </div>
-      <div v-else>
+      <div v-else class="has-login">
         <span
           class="publish-btn"
           @click="routerToPublish()"
-        >发帖</span>
-        <span>{{ nickname }}</span> |
-        <span @click="routerToLogout()">退出</span>
+        >
+          发帖
+        </span>
+        <div class="user-info" @click="routerToUserCenter">
+          <el-avatar class="user-avatar" :size="30" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+          <span class="text-margin">{{ nickname }}</span>
+        </div> |
+        <span class="text-margin" @click="routerToLogout()">退出</span>
       </div>
     </div>
   </div>
@@ -123,6 +128,11 @@ export default {
       this.$router.push({
         path: '/publish'
       })
+    },
+    routerToUserCenter () {
+      this.$router.push({
+        path: '/user/home'
+      })
     }
   }
 }
@@ -163,14 +173,31 @@ export default {
         }
       }
       .publish-btn {
-        padding: 4px 16px 6px;
         border: 1px solid #fff;
         border-radius: 24px;
         margin-right: 10px;
+        width: 60px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
         &:hover {
           border-color: #41b883
         }
       }
+    }
+  }
+  .has-login {
+    display: flex;
+    align-items: center;
+    .user-info {
+      display: flex;
+      align-items: center;
+      .user-avatar:hover {
+        opacity: 0.7;
+      }
+    }
+    .text-margin {
+      margin: 0 5px;
     }
   }
 </style>

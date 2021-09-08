@@ -46,7 +46,7 @@ export default {
     },
     card_data: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   computed: {

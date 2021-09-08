@@ -1,6 +1,6 @@
 <template>
   <div>
-    <list
+    <column-list
       :card_data="card_data"
       :articles_data="articles_data"
       :menu_id="menu_id"
@@ -8,11 +8,11 @@
   </div>
 </template>
 <script>
-import list from '~/components/list/CommonList'
+import ColumnList from '~/components/list/ColumnList'
 import { MENU_DETAIL, ARTICLE_LIST } from '~/api'
 export default {
   components: {
-    list
+    ColumnList
   },
   async asyncData ({ $axios, params }) {
     let cardData = []

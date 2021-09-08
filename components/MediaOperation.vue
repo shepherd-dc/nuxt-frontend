@@ -1,9 +1,9 @@
 <template>
   <div class="media-operation">
-    <span class="operation-icon thumb" :class="liked ? 'active' : ''" @click="like">
+    <span class="operation-icon thumb" :class="liked ? 'active' : ''" @click.stop="like">
       <i class="el-icon-thumb" /> 点赞 {{ mediaInfo.likes }}
     </span>
-    <span v-if="!isReply" class="operation-icon star" :class="stared ? 'active' : ''" @click="star">
+    <span v-if="!isReply" class="operation-icon star" :class="stared ? 'active' : ''" @click.stop="star">
       <i :class="stared ? 'el-icon-star-on' : 'el-icon-star-off'" /> 收藏 {{ mediaInfo.stars }}
     </span>
     <span class="operation-icon comment" @click="onComment"><i class="el-icon-chat-line-square" /> {{ isReply ? `回复 ${replies}` : `评论 ${mediaInfo.comments}` }}</span>

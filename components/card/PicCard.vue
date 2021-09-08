@@ -43,7 +43,7 @@ export default {
     },
     sub_data: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   methods: {

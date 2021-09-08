@@ -1,14 +1,16 @@
 <template>
   <div class="author-info">
-    <el-avatar :size="50" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <el-avatar :size="avatarSize" icon="el-icon-user-solid" :src="avatarSrc" />
     <div class="author-info__right">
       <div class="align-box">
-        <div class="name">
+        <div class="name" :style="authorBold ? {fontWeight: 'bold'} : ''">
           {{ authorInfo.name }}
         </div>
         <div class="desc">
-          <span class="date">{{ authorInfo.date }}</span>
-          <i class="el-icon-view" /><span class="view-num">{{ authorInfo.views }}</span>
+          <slot>
+            <span class="date">{{ authorInfo.date }}</span>
+            <span v-if="showView"><i class="el-icon-view" /><span class="view-num">{{ authorInfo.views }}</span></span>
+          </slot>
         </div>
       </div>
     </div>
@@ -21,6 +23,23 @@ export default {
     authorInfo: {
       type: Object,
       default: () => ({})
+    },
+    avatarSize: {
+      type: Number,
+      default: 50
+    },
+    avatarSrc: {
+      type: String,
+      default: ''
+      // default: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+    },
+    authorBold: {
+      type: Boolean,
+      default: true
+    },
+    showView: {
+      type: Boolean,
+      default: true
     }
   }
 }
@@ -37,7 +56,6 @@ export default {
       line-height: 1.5;
       margin-left: 10px;
       .name {
-        font-weight: bold;
         color: #333;
       }
       .desc {

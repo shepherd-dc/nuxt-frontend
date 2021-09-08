@@ -1,6 +1,7 @@
 <template>
   <div>
-    <single-column
+    <column-list
+      single
       :column_data="column_data"
       :articles_data="articles_data"
       :column_id="column_id"
@@ -8,11 +9,11 @@
   </div>
 </template>
 <script>
-import SingleColumn from '~/components/SingleColumn'
+import ColumnList from '~/components/list/ColumnList'
 import { MENU_SUBMENU, ARTICLE_LIST } from '~/api'
 export default {
   components: {
-    SingleColumn
+    ColumnList
   },
   async asyncData ({ $axios, params }) {
     let columnData = {}

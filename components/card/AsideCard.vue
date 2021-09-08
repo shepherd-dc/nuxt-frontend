@@ -36,7 +36,7 @@ export default {
     },
     aside_data: {
       type: Array,
-      default: () => {}
+      default: () => []
     },
     show_more: {
       type: Boolean,
