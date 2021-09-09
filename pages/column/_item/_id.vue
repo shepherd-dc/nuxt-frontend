@@ -3,7 +3,8 @@
     <column-list
       single
       :column_data="column_data"
-      :articles_data="articles_data"
+      :articles-data="articlesData"
+      :articles-total="articlesTotal"
       :column_id="column_id"
     />
   </div>
@@ -11,13 +12,16 @@
 <script>
 import ColumnList from '~/components/list/ColumnList'
 import { MENU_SUBMENU, ARTICLE_LIST } from '~/api'
+import tokenMixin from '@/mixins/token'
 export default {
   components: {
     ColumnList
   },
+  mixins: [tokenMixin],
   async asyncData ({ $axios, params }) {
     let columnData = {}
     let articlesData = []
+    let articlesTotal = 0
     let column_id = ''
     const column = await $axios.get(`${MENU_SUBMENU}/${params.id}`)
     if (column.error_code === 0) {
@@ -28,11 +32,13 @@ export default {
       if (articles.error_code === 0) {
         const { data } = articles
         articlesData = data.data
+        articlesTotal = data.total
       }
     }
     return {
       column_data: columnData,
-      articles_data: articlesData,
+      articlesData,
+      articlesTotal,
       column_id
     }
   }

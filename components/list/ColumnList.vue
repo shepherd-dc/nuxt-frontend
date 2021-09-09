@@ -15,22 +15,15 @@
               <main-card :card_data="card_data" :islist="islist" />
             </template>
 
-            <article-list :articles_data="list" />
-            <pagination
-              v-show="total > 10"
-              :total="total"
-              :page.sync="listQuery.page"
-              :limit.sync="listQuery.limit"
-              @pagination="getList"
-            />
+            <article-list :articles-data="articlesData" :articles-total="articlesTotal" :menu_id="menu_id" :column_id="column_id" />
           </el-col>
           <el-col
             v-if="isPC"
             :span="6"
           >
             <aside-card
-              :aside_title="title1"
-              :aside_data="articles_data"
+              :aside_title="asideTitle"
+              :aside_data="articlesData"
             />
           </el-col>
         </el-row>
@@ -41,29 +34,30 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ARTICLE_LIST } from '~/api'
 import MainCard from '~/components/card/MainCard'
 import ColCard from '~/components/card/ColCard'
 import AsideCard from '~/components/card/AsideCard'
 import ArticleList from '~/components/list/ArticleList'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   components: {
     MainCard,
     ColCard,
     AsideCard,
-    ArticleList,
-    Pagination
+    ArticleList
   },
   props: {
     card_data: {
       type: Object,
       default: () => ({})
     },
-    articles_data: {
+    articlesData: {
       type: Array,
       default: () => []
+    },
+    articlesTotal: {
+      type: Number,
+      default: 0
     },
     menu_id: {
       type: String,
@@ -85,42 +79,13 @@ export default {
   data () {
     return {
       islist: false,
-      title1: '最新',
-      total: 10,
-      list: [],
-      listQuery: {
-        page: 1,
-        limit: 10,
-        menu_id: '',
-        column_id: ''
-      }
+      asideTitle: '最新'
     }
   },
   computed: {
     ...mapGetters([
       'isPC'
     ])
-  },
-  created () {
-    this.getList()
-  },
-  methods: {
-    async getList () {
-      if (this.menu_id) {
-        this.listQuery.menu_id = this.menu_id
-      }
-      if (this.column_id) {
-        this.listQuery.column_id = this.column_id
-      }
-      const res = await this.$axios.get(ARTICLE_LIST, {
-        params: { ...this.listQuery }
-      })
-      if (res.error_code === 0) {
-        const { data } = res
-        this.list = data.data
-        this.total = data.total
-      }
-    }
   }
 }
 </script>

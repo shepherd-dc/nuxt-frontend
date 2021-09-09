@@ -1,12 +1,12 @@
 <template>
   <div class="media-operation">
-    <span class="operation-icon thumb" :class="liked ? 'active' : ''" @click.stop="like">
+    <span class="operation-icon thumb" :class="liked ? 'active' : ''" @click.stop="onLike">
       <i class="el-icon-thumb" /> 点赞 {{ mediaInfo.likes }}
     </span>
-    <span v-if="!isReply" class="operation-icon star" :class="stared ? 'active' : ''" @click.stop="star">
+    <span v-if="!isReply" class="operation-icon star" :class="stared ? 'active' : ''" @click.stop="onStar">
       <i :class="stared ? 'el-icon-star-on' : 'el-icon-star-off'" /> 收藏 {{ mediaInfo.stars }}
     </span>
-    <span class="operation-icon comment" @click="onComment"><i class="el-icon-chat-line-square" /> {{ isReply ? `回复 ${replies}` : `评论 ${mediaInfo.comments}` }}</span>
+    <span class="operation-icon comment" @click="onComment"><i class="el-icon-chat-line-square" /> {{ isReply ? `回复 ${replies || ''}` : `评论 ${mediaInfo.comments || ''}` }}</span>
     <!-- <span v-if="!isReply" class="operation-icon share"><i class="el-icon-position" /> 转发</span> -->
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
       const eventName = this.isReply ? 'on-reply' : 'on-comment'
       this.$emit(eventName)
     },
-    async like () {
+    async onLike () {
       if (!loginRequired(this)) { return }
 
       if (this.liked) {
@@ -105,7 +105,7 @@ export default {
         this.liked = 1
       }
     },
-    star: throttle(async function () {
+    onStar: throttle(async function () {
       if (!loginRequired(this)) { return }
 
       await this.starRequest()

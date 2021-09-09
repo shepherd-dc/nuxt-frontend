@@ -19,13 +19,13 @@
     <el-card class="box-card">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="我的文章" name="1">
-          <ArticleCardList />
+          <ArticleList :has-card="false" />
         </el-tab-pane>
         <el-tab-pane label="我的收藏" name="2">
-          <ArticleCardList :articles-data="articlesData" />
+          <ArticleList :has-card="false" :articles-data="articlesData" :articles-total="articlesTotal" />
         </el-tab-pane>
         <el-tab-pane label="我的点赞" name="3">
-          <ArticleCardList />
+          <ArticleList :has-card="false" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -34,27 +34,28 @@
 
 <script>
 import AuthorInfo from '~/components/AuthorInfo'
-import ArticleCardList from '~/components/list/ArticleCardList'
+import ArticleList from '~/components/list/ArticleList'
 import { ARTICLE_LIST } from '~/api'
+import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
     AuthorInfo,
-    ArticleCardList
+    ArticleList
   },
+  mixins: [tokenMixin],
   async asyncData ({ $axios, params, app }) {
     let articlesData = []
+    let articlesTotal = 0
     const articles = await $axios.get(ARTICLE_LIST)
     if (articles.error_code === 0) {
       const { data } = articles
       articlesData = data.data
-      articlesData.map((article) => {
-        article.content = article.content.replace(/<\/?.+?>/g, '').substr(0, 280) + '...'
-        return article
-      })
+      articlesTotal = data.total
     }
     return {
-      articlesData
+      articlesData,
+      articlesTotal
     }
   },
   data () {
