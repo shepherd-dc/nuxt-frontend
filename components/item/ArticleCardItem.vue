@@ -21,6 +21,11 @@ export default {
     AuthorInfo,
     MediaOperation
   },
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
+  },
   props: {
     article: {
       type: Object,
@@ -32,7 +37,8 @@ export default {
       likes: this.article.likes,
       stars: this.article.stars,
       isLiked: 0,
-      isStared: 0
+      isStared: 0,
+      valid: this.tokenInfo.valid
     }
   },
   computed: {
@@ -52,9 +58,23 @@ export default {
       }
     }
   },
+  watch: {
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+        if (this.valid) {
+          this.getLike()
+          this.getStar()
+        }
+      }
+    }
+  },
   mounted () {
-    this.getLike()
-    this.getStar()
+    if (this.valid) {
+      this.getLike()
+      this.getStar()
+    }
   },
   methods: {
     async getActicle (id) {

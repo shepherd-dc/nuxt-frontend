@@ -86,11 +86,13 @@
 import { mapGetters } from 'vuex'
 import QuillEditor from '~/components/QuillEditor'
 import { ARTICLE_PUBLISH } from '~/api'
+import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
     QuillEditor
   },
+  mixins: [tokenMixin],
   data () {
     return {
       form: {
