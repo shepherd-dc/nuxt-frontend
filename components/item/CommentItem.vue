@@ -31,7 +31,6 @@ import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import ReplyList from '~/components/list/ReplyList'
 import { REPLY_SUBMIT, COMMENT_LIKE, COMMENT_DETAIL } from '~/api'
-import { loginRequired } from '@/utils/auth'
 
 export default {
   components: {
@@ -39,14 +38,13 @@ export default {
     CommentTextarea,
     ReplyList
   },
-  inject: {
-    tokenInfo: {
-      default: () => ({})
-    }
-  },
   props: {
     comment: {
       type: Object,
+      default: () => ({})
+    },
+    likes: {
+      type: Array,
       default: () => ({})
     }
   },
@@ -54,9 +52,7 @@ export default {
     return {
       commentDetail: this.comment,
       showTextarea: false,
-      isLiked: 0,
-      isStared: 0,
-      valid: this.tokenInfo.valid
+      isLiked: 0
     }
   },
   computed: {
@@ -74,19 +70,16 @@ export default {
     comment (v) {
       this.commentDetail = v
     },
-    tokenInfo: {
-      deep: true,
-      handler (v) {
-        this.valid = v.valid
-        if (this.valid) {
-          this.getLike()
+    likes: {
+      handler (likes) {
+        const ids = []
+        likes.forEach((like) => {
+          ids.push(like.type_id)
+        })
+        if (ids.includes(this.commentDetail.id)) {
+          this.isLiked = 1
         }
       }
-    }
-  },
-  mounted () {
-    if (this.valid) {
-      this.getLike()
     }
   },
   methods: {
@@ -97,7 +90,6 @@ export default {
       })
     },
     async replyComment (content) {
-      if (!loginRequired(this)) { return }
       if (!content) {
         this.$message({
           showClose: true,

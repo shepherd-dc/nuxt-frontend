@@ -3,10 +3,10 @@
     <el-card class="box-card">
       <div class="comment-header">
         全部评论
-        <!-- <span>（{{ comments.total }}）</span> -->
+        <span>（{{ comments.total }}）</span>
       </div>
       <div v-for="c in comments.data" :key="c.id">
-        <CommentItem :comment="c" />
+        <CommentItem :comment="c" :likes="cLikes" />
       </div>
     </el-card>
   </div>
@@ -23,6 +23,20 @@ export default {
     comments: {
       type: Object,
       default: () => ({})
+    },
+    commentsLikes: {
+      type: Array,
+      default: () => []
+    }
+  },
+  data () {
+    return {
+      cLikes: this.commentsLikes
+    }
+  },
+  watch: {
+    commentsLikes (v) {
+      this.cLikes = v
     }
   }
 }

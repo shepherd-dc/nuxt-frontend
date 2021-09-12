@@ -35,7 +35,13 @@
 </template>
 
 <script>
+import { loginRequired } from '@/utils/auth'
 export default {
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
+  },
   props: {
     avatarSize: {
       type: Number,
@@ -49,7 +55,16 @@ export default {
   data () {
     return {
       textarea: '',
-      showButtons: false
+      showButtons: false,
+      valid: this.tokenInfo.valid
+    }
+  },
+  watch: {
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+      }
     }
   },
   methods: {
@@ -62,6 +77,7 @@ export default {
       this.showButtons = false
     },
     onSubmit () {
+      if (!loginRequired(this)) { return }
       this.$emit('submit', this.textarea)
     },
     clear () {

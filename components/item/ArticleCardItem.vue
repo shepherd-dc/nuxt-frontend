@@ -1,6 +1,6 @@
 <template>
   <div class="article-card-item" @click="routerToDetail(article.id)">
-    <AuthorInfo :author-info="{name: article.author || '佚名', date: article.create_time}" :author-bold="false" :show-view="false" :avatar-size="40" avatar-src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <AuthorInfo :author-info="authorInfo" :author-bold="false" :show-view="false" :avatar-size="40" avatar-src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
     <div class="article-item">
       <h4 class="title">
         {{ article.title }}
@@ -45,6 +45,12 @@ export default {
     content () {
       const content = this.article.content.replace(/<\/?.+?>/g, '').substr(0, 280)
       return content.length < 280 ? content : content + '...'
+    },
+    authorInfo () {
+      return {
+        name: this.article.author || this.article.user_name || '佚名',
+        date: this.article.create_time
+      }
     },
     mediaInfo () {
       return {

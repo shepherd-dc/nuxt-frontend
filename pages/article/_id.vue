@@ -36,7 +36,7 @@
         <el-card class="box-card">
           <CommentTextarea ref="commentTextarea" @submit="handleCommentSubmit" />
         </el-card>
-        <CommentList :comments="comments" />
+        <CommentList :comments="comments" :comments-likes="commentsLikes" />
       </el-col>
       <el-col
         v-if="isPC"
@@ -58,7 +58,7 @@ import CommentList from '~/components/list/CommentList'
 import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
-import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
+import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR, ARTICLE_COMMENTS_LIKES, ARTICLE_REPLIES_LIKES } from '~/api'
 import { checkToken, loginRequired } from '@/utils/auth'
 
 export default {
@@ -100,7 +100,8 @@ export default {
   },
   provide () {
     return {
-      tokenInfo: this.tokenInfo
+      tokenInfo: this.tokenInfo,
+      repliesLikes: this.repliesLikes
     }
   },
   data () {
@@ -111,6 +112,10 @@ export default {
       valid: false,
       tokenInfo: {
         valid: false
+      },
+      commentsLikes: [],
+      repliesLikes: {
+        likes: []
       }
     }
   },
@@ -143,16 +148,21 @@ export default {
       this.getComments()
     })
   },
-  async mounted () {
-    const res = await checkToken(this)
-    if (res.valid) {
-      this.tokenInfo.valid = true
-      this.valid = true
-      this.getLike()
-      this.getStar()
-    }
+  mounted () {
+    this.init()
   },
   methods: {
+    async init () {
+      const res = await checkToken(this)
+      if (res.valid) {
+        this.tokenInfo.valid = true
+        this.valid = true
+        this.getArticleLike()
+        this.getArticleStar()
+        this.getArticleCommentsLikes()
+        this.getArticleRepliesLikes()
+      }
+    },
     routerBreadMenu () {
       this.$router.push({
         path: `/column/${this.menu}`
@@ -196,18 +206,32 @@ export default {
         this.article = data
       }
     },
-    async getLike () {
+    async getArticleLike () {
       const likeRes = await this.$axios.get(`${ARTICLE_LIKE}/${this.article.id}`)
       if (likeRes.error_code === 0) {
         const { data } = likeRes
         this.isLiked = data.is_liked
       }
     },
-    async getStar () {
+    async getArticleStar () {
       const starRes = await this.$axios.get(`${ARTICLE_STAR}/${this.article.id}`)
       if (starRes.error_code === 0) {
         const { data } = starRes
         this.isStared = data.is_stared
+      }
+    },
+    async getArticleCommentsLikes () {
+      const likeRes = await this.$axios.get(`${ARTICLE_COMMENTS_LIKES}/${this.article.id}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.commentsLikes = data
+      }
+    },
+    async getArticleRepliesLikes () {
+      const likeRes = await this.$axios.get(`${ARTICLE_REPLIES_LIKES}/${this.article.id}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.repliesLikes.likes = data
       }
     },
     handleCommentClick () {
@@ -215,11 +239,11 @@ export default {
     },
     handleLikeCallback () {
       this.getActicle()
-      this.getLike()
+      this.getArticleLike()
     },
     handleStarCallback () {
       this.getActicle()
-      this.getStar()
+      this.getArticleStar()
     }
   }
 }

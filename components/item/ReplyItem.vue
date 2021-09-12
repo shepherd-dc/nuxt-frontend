@@ -29,7 +29,6 @@
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import { REPLY_SUBMIT, REPLY_LIKE, REPLY_DETAIL } from '~/api'
-import { loginRequired } from '@/utils/auth'
 
 export default {
   components: {
@@ -43,16 +42,15 @@ export default {
     }
   },
   inject: {
-    tokenInfo: {
-      default: () => ({})
+    repliesLikes: {
+      default: () => []
     }
   },
   data () {
     return {
       replyDetail: this.reply,
       showTextarea: false,
-      isLiked: 0,
-      valid: this.tokenInfo.valid
+      isLiked: 0
     }
   },
   computed: {
@@ -69,19 +67,17 @@ export default {
     reply (v) {
       this.replyDetail = v
     },
-    tokenInfo: {
+    repliesLikes: {
       deep: true,
       handler (v) {
-        this.valid = v.valid
-        if (this.valid) {
-          this.getLike()
+        const ids = []
+        v.likes.forEach((like) => {
+          ids.push(like.type_id)
+        })
+        if (ids.includes(this.replyDetail.id)) {
+          this.isLiked = 1
         }
       }
-    }
-  },
-  mounted () {
-    if (this.valid) {
-      this.getLike()
     }
   },
   methods: {
@@ -92,8 +88,6 @@ export default {
       })
     },
     async replyReply (content) {
-      if (!loginRequired(this)) { return }
-
       if (!content) {
         this.$message({
           showClose: true,
