@@ -12,12 +12,10 @@
 <script>
 import ColumnList from '~/components/list/ColumnList'
 import { MENU_SUBMENU, ARTICLE_LIST } from '~/api'
-import tokenMixin from '@/mixins/token'
 export default {
   components: {
     ColumnList
   },
-  mixins: [tokenMixin],
   async asyncData ({ $axios, params }) {
     let columnData = {}
     let articlesData = []

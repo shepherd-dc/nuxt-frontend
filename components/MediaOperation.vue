@@ -93,6 +93,7 @@ export default {
         })
         return
       }
+
       await this.likeRequest()
       this.$emit('on-like')
     },
@@ -103,6 +104,12 @@ export default {
       const res = await this.$axios.post(this.likeApi, formData)
       if (res.error_code === 0) {
         this.liked = 1
+      } else if (res.error_code === 2003) {
+        this.$message({
+          showClose: true,
+          message: '您已经点过赞了',
+          type: 'success'
+        })
       }
     },
     onStar: throttle(async function () {

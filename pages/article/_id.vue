@@ -59,7 +59,7 @@ import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
 import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR, ARTICLE_COMMENTS_LIKES, ARTICLE_REPLIES_LIKES } from '~/api'
-import { checkToken, loginRequired } from '@/utils/auth'
+import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
@@ -69,6 +69,7 @@ export default {
     CommentTextarea,
     MediaOperation
   },
+  mixins: [tokenMixin],
   async asyncData ({ $axios, params, app }) {
     // console.log('$bus', app.$bus)
     let articleData = {}
@@ -100,7 +101,6 @@ export default {
   },
   provide () {
     return {
-      tokenInfo: this.tokenInfo,
       repliesLikes: this.repliesLikes
     }
   },
@@ -109,10 +109,6 @@ export default {
       asideTitle: '最新',
       isLiked: 0,
       isStared: 0,
-      valid: false,
-      tokenInfo: {
-        valid: false
-      },
       commentsLikes: [],
       repliesLikes: {
         likes: []
@@ -152,16 +148,14 @@ export default {
     this.init()
   },
   methods: {
-    async init () {
-      const res = await checkToken(this)
-      if (res.valid) {
-        this.tokenInfo.valid = true
-        this.valid = true
-        this.getArticleLike()
-        this.getArticleStar()
-        this.getArticleCommentsLikes()
-        this.getArticleRepliesLikes()
-      }
+    init () {
+      this.checkToken(this.getMediaData)
+    },
+    getMediaData () {
+      this.getArticleLike()
+      this.getArticleStar()
+      this.getArticleCommentsLikes()
+      this.getArticleRepliesLikes()
     },
     routerBreadMenu () {
       this.$router.push({
@@ -174,7 +168,6 @@ export default {
       })
     },
     async handleCommentSubmit (content) {
-      if (!loginRequired(this)) { return }
       if (!content) {
         this.$message({
           showClose: true,

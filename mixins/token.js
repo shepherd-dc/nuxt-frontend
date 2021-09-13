@@ -14,11 +14,16 @@ export default {
       }
     }
   },
-  async mounted () {
-    const res = await checkToken(this)
-    if (res.valid) {
-      this.tokenInfo.valid = true
-      this.valid = true
+  methods: {
+    async checkToken (cb) {
+      const res = await checkToken(this)
+      if (res.valid) {
+        this.tokenInfo.valid = true
+        this.valid = true
+        if (cb) { cb() }
+        return true
+      }
+      return false
     }
   }
 }

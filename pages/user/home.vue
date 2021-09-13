@@ -36,14 +36,12 @@
 import AuthorInfo from '~/components/AuthorInfo'
 import ArticleList from '~/components/list/ArticleList'
 import { ARTICLE_LIST } from '~/api'
-import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
     AuthorInfo,
     ArticleList
   },
-  mixins: [tokenMixin],
   async asyncData ({ $axios, params, app }) {
     let articlesData = []
     let articlesTotal = 0
@@ -65,9 +63,6 @@ export default {
       },
       activeName: '2'
     }
-  },
-  mounted () {
-    console.log('articlesData:', this.articlesData)
   },
   methods: {
     handleClick (tab, event) {

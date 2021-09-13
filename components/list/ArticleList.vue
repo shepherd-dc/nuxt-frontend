@@ -12,7 +12,7 @@
         :key="article.id"
         class="text item list"
       >
-        <ArticleCardItem :article="article" />
+        <ArticleCardItem :article="article" :my-likes="articlesLikes" :my-stars="articlesStars" />
       </div>
     </el-card>
     <template v-else>
@@ -21,7 +21,7 @@
         :key="article.id"
         class="text item list"
       >
-        <ArticleCardItem :article="article" />
+        <ArticleCardItem :article="article" :my-likes="articlesLikes" :my-stars="articlesStars" />
       </div>
     </template>
     <pagination
@@ -37,13 +37,15 @@
 <script>
 import ArticleCardItem from '@/components/item/ArticleCardItem.vue'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import { ARTICLE_LIST } from '~/api'
+import { ARTICLE_LIST, ARTICLES_LIKES, ARTICLES_STARS } from '~/api'
+import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
     ArticleCardItem,
     Pagination
   },
+  mixins: [tokenMixin],
   props: {
     hasCard: {
       type: Boolean,
@@ -75,10 +77,31 @@ export default {
         limit: 10,
         menu_id: '',
         column_id: ''
-      }
+      },
+      articlesLikes: [],
+      articlesStars: []
     }
   },
+  computed: {
+    idList () {
+      const ids = []
+      this.list.forEach((article) => {
+        ids.push(article.id)
+      })
+      return btoa(ids.join(','))
+    }
+  },
+  mounted () {
+    this.init()
+  },
   methods: {
+    init () {
+      this.checkToken(this.getMediaData)
+    },
+    getMediaData () {
+      this.getArticlesLikes()
+      this.getArticlesStars()
+    },
     async getList () {
       if (this.menu_id) {
         this.listQuery.menu_id = this.menu_id
@@ -93,6 +116,21 @@ export default {
         const { data } = res
         this.list = data.data
         this.total = data.total
+        this.getMediaData()
+      }
+    },
+    async getArticlesLikes () {
+      const likeRes = await this.$axios.get(`${ARTICLES_LIKES}?list=${this.idList}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.articlesLikes = data
+      }
+    },
+    async getArticlesStars () {
+      const starRes = await this.$axios.get(`${ARTICLES_STARS}?list=${this.idList}`)
+      if (starRes.error_code === 0) {
+        const { data } = starRes
+        this.articlesStars = data
       }
     }
   }

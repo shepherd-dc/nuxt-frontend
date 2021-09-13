@@ -21,15 +21,18 @@ export default {
     AuthorInfo,
     MediaOperation
   },
-  inject: {
-    tokenInfo: {
-      default: () => ({})
-    }
-  },
   props: {
     article: {
       type: Object,
       default: () => ({})
+    },
+    myLikes: {
+      type: Array,
+      default: () => []
+    },
+    myStars: {
+      type: Array,
+      default: () => []
     }
   },
   data () {
@@ -37,8 +40,7 @@ export default {
       likes: this.article.likes,
       stars: this.article.stars,
       isLiked: 0,
-      isStared: 0,
-      valid: this.tokenInfo.valid
+      isStared: 0
     }
   },
   computed: {
@@ -65,25 +67,31 @@ export default {
     }
   },
   watch: {
-    tokenInfo: {
-      deep: true,
-      handler (v) {
-        this.valid = v.valid
-        if (this.valid) {
-          this.getLike()
-          this.getStar()
+    myLikes: {
+      handler (likes) {
+        const ids = []
+        likes.forEach((like) => {
+          ids.push(like.type_id)
+        })
+        if (ids.includes(this.article.id)) {
+          this.isLiked = 1
+        }
+      }
+    },
+    myStars: {
+      handler (stars) {
+        const ids = []
+        stars.forEach((star) => {
+          ids.push(star.type_id)
+        })
+        if (ids.includes(this.article.id)) {
+          this.isStared = 1
         }
       }
     }
   },
-  mounted () {
-    if (this.valid) {
-      this.getLike()
-      this.getStar()
-    }
-  },
   methods: {
-    async getActicle (id) {
+    async getActicle () {
       const articleRes = await this.$axios.get(`${ARTICLE_DETAIL}/${this.article.id}`)
       if (articleRes.error_code === 0) {
         const { data } = articleRes

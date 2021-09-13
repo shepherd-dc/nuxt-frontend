@@ -45,7 +45,7 @@ export default {
     },
     likes: {
       type: Array,
-      default: () => ({})
+      default: () => []
     }
   },
   data () {
