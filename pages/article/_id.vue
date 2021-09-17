@@ -107,6 +107,10 @@ export default {
   data () {
     return {
       asideTitle: '最新',
+      listQuery: {
+        page: 1,
+        limit: 5
+      },
       isLiked: 0,
       isStared: 0,
       commentsLikes: [],
@@ -138,11 +142,6 @@ export default {
         isStared: this.isStared
       }
     }
-  },
-  created () {
-    this.$bus.$on('updateComments', () => {
-      this.getComments()
-    })
   },
   mounted () {
     this.init()
@@ -186,7 +185,7 @@ export default {
       }
     },
     async getComments () {
-      const commentsRes = await this.$axios.get(`${COMMENT_LIST}/${this.article.id}`)
+      const commentsRes = await this.$axios.get(`${COMMENT_LIST}/${this.article.id}`, { params: { ...this.listQuery } })
       if (commentsRes.error_code === 0) {
         const { data } = commentsRes
         this.comments = data

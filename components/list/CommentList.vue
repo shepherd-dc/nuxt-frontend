@@ -5,19 +5,29 @@
         全部评论
         <span>（{{ comments.total }}）</span>
       </div>
-      <div v-for="c in comments.data" :key="c.id">
+      <div v-for="c in list" :key="c.id">
         <CommentItem :comment="c" :likes="cLikes" />
       </div>
+      <pagination
+        v-show="total > 5"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        @pagination="getList"
+      />
     </el-card>
   </div>
 </template>
 
 <script>
 import CommentItem from '~/components/item/CommentItem'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { COMMENT_LIST } from '~/api'
 
 export default {
   components: {
-    CommentItem
+    CommentItem,
+    Pagination
   },
   props: {
     comments: {
@@ -31,12 +41,45 @@ export default {
   },
   data () {
     return {
+      total: this.comments.total,
+      list: this.comments.data,
+      listQuery: {
+        page: 1,
+        limit: 5
+      },
       cLikes: this.commentsLikes
     }
   },
+  computed: {
+    articleId () {
+      return this.$route.params.id
+    }
+  },
   watch: {
+    comments (v) {
+      this.total = v.total
+      this.list = v.data
+    },
     commentsLikes (v) {
       this.cLikes = v
+    }
+  },
+  created () {
+    this.$bus.$on('updateComments', () => {
+      this.getList()
+    })
+  },
+  methods: {
+    async getList () {
+      const res = await this.$axios.get(`${COMMENT_LIST}/${this.articleId}`, {
+        params: { ...this.listQuery }
+      })
+      if (res.error_code === 0) {
+        const { data } = res
+        this.list = data.data
+        this.total = data.total
+        // this.getMediaData()
+      }
     }
   }
 }

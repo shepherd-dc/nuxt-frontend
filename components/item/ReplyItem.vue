@@ -111,6 +111,7 @@ export default {
         this.$refs.commentTextarea.clear()
         this.showTextarea = false
         this.$bus.$emit('updateComments')
+        this.$parent.update()
       }
     },
     async getReply () {
@@ -166,7 +167,7 @@ export default {
     color: #333;
     line-height: 1.5;
     &-object {
-      color: #41b883;
+      color: #999;
     }
     &-content {
       white-space: pre-line;
