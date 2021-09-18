@@ -6,7 +6,7 @@
         <span>（{{ comments.total }}）</span>
       </div>
       <div v-for="c in list" :key="c.id">
-        <CommentItem :comment="c" :likes="cLikes" />
+        <CommentItem :comment="c" :likes="commentsLikes" />
       </div>
       <pagination
         v-show="total > 5"
@@ -22,37 +22,63 @@
 <script>
 import CommentItem from '~/components/item/CommentItem'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import { COMMENT_LIST } from '~/api'
+import { COMMENT_LIST, COMMENTS_LIKES, REPLIES_LIKES } from '~/api'
 
 export default {
   components: {
     CommentItem,
     Pagination
   },
+  inject: {
+    tokenInfo: {
+      default: () => ({})
+    }
+  },
   props: {
     comments: {
       type: Object,
       default: () => ({})
-    },
-    commentsLikes: {
-      type: Array,
-      default: () => []
+    }
+  },
+  provide () {
+    return {
+      repliesLikes: this.repliesLikes
     }
   },
   data () {
     return {
       total: this.comments.total,
-      list: this.comments.data,
+      list: this.comments.data.sort((a, b) => b.likes - a.likes),
       listQuery: {
         page: 1,
         limit: 5
       },
-      cLikes: this.commentsLikes
+      valid: this.tokenInfo.valid,
+      commentsLikes: [],
+      repliesLikes: {
+        likes: []
+      }
     }
   },
   computed: {
     articleId () {
       return this.$route.params.id
+    },
+    commentsIdList () {
+      const ids = []
+      this.list.forEach((comment) => {
+        ids.push(comment.id)
+      })
+      return btoa(ids.join(','))
+    },
+    repliesIdList () {
+      const ids = []
+      this.list.forEach((comment) => {
+        for (const reply of comment.replies) {
+          ids.push(reply.id)
+        }
+      })
+      return btoa(ids.join(','))
     }
   },
   watch: {
@@ -60,8 +86,12 @@ export default {
       this.total = v.total
       this.list = v.data
     },
-    commentsLikes (v) {
-      this.cLikes = v
+    tokenInfo: {
+      deep: true,
+      handler (v) {
+        this.valid = v.valid
+        this.init()
+      }
     }
   },
   created () {
@@ -69,7 +99,16 @@ export default {
       this.getList()
     })
   },
+  mounted () {
+    this.init()
+  },
   methods: {
+    init () {
+      if (this.valid) {
+        this.getCommentsLikes()
+        this.getRepliesLikes()
+      }
+    },
     async getList () {
       const res = await this.$axios.get(`${COMMENT_LIST}/${this.articleId}`, {
         params: { ...this.listQuery }
@@ -78,7 +117,21 @@ export default {
         const { data } = res
         this.list = data.data
         this.total = data.total
-        // this.getMediaData()
+        this.init()
+      }
+    },
+    async getCommentsLikes () {
+      const likeRes = await this.$axios.get(`${COMMENTS_LIKES}?list=${this.commentsIdList}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.commentsLikes = data
+      }
+    },
+    async getRepliesLikes () {
+      const likeRes = await this.$axios.get(`${REPLIES_LIKES}?list=${this.repliesIdList}`)
+      if (likeRes.error_code === 0) {
+        const { data } = likeRes
+        this.repliesLikes.likes = data
       }
     }
   }

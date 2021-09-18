@@ -39,6 +39,7 @@ export default {
     return {
       likes: this.article.likes,
       stars: this.article.stars,
+      comments: this.article.comments_num,
       isLiked: 0,
       isStared: 0
     }
@@ -58,7 +59,7 @@ export default {
       return {
         likes: this.likes,
         stars: this.stars,
-        comments: this.article.comments.length,
+        comments: this.comments,
         type: 'article',
         type_id: this.article.id,
         isLiked: this.isLiked,
@@ -97,6 +98,7 @@ export default {
         const { data } = articleRes
         this.likes = data.likes
         this.stars = data.stars
+        this.comments = data.comments_num
       }
     },
     async getLike () {

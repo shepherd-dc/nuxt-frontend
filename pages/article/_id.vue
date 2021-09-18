@@ -36,7 +36,7 @@
         <el-card class="box-card">
           <CommentTextarea ref="commentTextarea" @submit="handleCommentSubmit" />
         </el-card>
-        <CommentList :comments="comments" :comments-likes="commentsLikes" />
+        <CommentList :comments="comments" />
       </el-col>
       <el-col
         v-if="isPC"
@@ -58,7 +58,7 @@ import CommentList from '~/components/list/CommentList'
 import CommentTextarea from '~/components/CommentTextarea'
 import MediaOperation from '~/components/MediaOperation'
 import AuthorInfo from '~/components/AuthorInfo'
-import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR, ARTICLE_COMMENTS_LIKES, ARTICLE_REPLIES_LIKES } from '~/api'
+import { ARTICLE_LIST, ARTICLE_DETAIL, COMMENT_LIST, COMMENT_SUBMIT, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
 import tokenMixin from '@/mixins/token'
 
 export default {
@@ -85,7 +85,7 @@ export default {
       const { data } = articles
       articlesData = data.data
     }
-    const commentsRes = await $axios.get(`${COMMENT_LIST}/${params.id}`)
+    const commentsRes = await $axios.get(`${COMMENT_LIST}/${params.id}`, { params: { page: 1, limit: 5 } })
     if (commentsRes.error_code === 0) {
       const { data } = commentsRes
       comments = data
@@ -99,11 +99,6 @@ export default {
       comments
     }
   },
-  provide () {
-    return {
-      repliesLikes: this.repliesLikes
-    }
-  },
   data () {
     return {
       asideTitle: '最新',
@@ -112,11 +107,7 @@ export default {
         limit: 5
       },
       isLiked: 0,
-      isStared: 0,
-      commentsLikes: [],
-      repliesLikes: {
-        likes: []
-      }
+      isStared: 0
     }
   },
   computed: {
@@ -153,8 +144,6 @@ export default {
     getMediaData () {
       this.getArticleLike()
       this.getArticleStar()
-      this.getArticleCommentsLikes()
-      this.getArticleRepliesLikes()
     },
     routerBreadMenu () {
       this.$router.push({
@@ -210,20 +199,6 @@ export default {
       if (starRes.error_code === 0) {
         const { data } = starRes
         this.isStared = data.is_stared
-      }
-    },
-    async getArticleCommentsLikes () {
-      const likeRes = await this.$axios.get(`${ARTICLE_COMMENTS_LIKES}/${this.article.id}`)
-      if (likeRes.error_code === 0) {
-        const { data } = likeRes
-        this.commentsLikes = data
-      }
-    },
-    async getArticleRepliesLikes () {
-      const likeRes = await this.$axios.get(`${ARTICLE_REPLIES_LIKES}/${this.article.id}`)
-      if (likeRes.error_code === 0) {
-        const { data } = likeRes
-        this.repliesLikes.likes = data
       }
     },
     handleCommentClick () {
