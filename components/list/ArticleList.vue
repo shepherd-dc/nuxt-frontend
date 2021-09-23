@@ -51,6 +51,10 @@ export default {
       type: Boolean,
       default: true
     },
+    listApi: {
+      type: String,
+      default: ''
+    },
     articlesData: {
       type: Array,
       default: () => []
@@ -91,25 +95,44 @@ export default {
       return btoa(ids.join(','))
     }
   },
+  watch: {
+    articlesData (v) {
+      this.list = v
+      this.init()
+    },
+    articlesTotal (v) {
+      this.total = v
+    }
+  },
   mounted () {
     this.init()
   },
   methods: {
     init () {
-      this.checkToken(this.getMediaData)
+      if (this.listApi) {
+        this.checkToken(this.getList)
+        return
+      }
+      if (this.idList) {
+        this.checkToken(this.getMediaData)
+      }
     },
     getMediaData () {
       this.getArticlesLikes()
       this.getArticlesStars()
     },
     async getList () {
+      let api = ARTICLE_LIST
+      if (this.listApi) {
+        api = this.listApi
+      }
       if (this.menu_id) {
         this.listQuery.menu_id = this.menu_id
       }
       if (this.column_id) {
         this.listQuery.column_id = this.column_id
       }
-      const res = await this.$axios.get(ARTICLE_LIST, {
+      const res = await this.$axios.get(api, {
         params: { ...this.listQuery }
       })
       if (res.error_code === 0) {

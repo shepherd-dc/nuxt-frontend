@@ -1,23 +1,36 @@
+@color-primary: #41b883;
+
 #__layout {
   .el-breadcrumb {
     line-height: 22px;
   }
   .el-button--text {
-    color:#41b883;
+    color: @color-primary;
   }
   .el-breadcrumb__inner.is-link:hover, .el-breadcrumb__inner a:hover {
-    color: #41b883;
+    color: @color-primary;
   }
 
   .el-tabs__header {
     margin: 0;
+  }
+  .el-tabs__item {
+    &.is-active {
+      color: @color-primary;
+    }
+    &:hover {
+      color: @color-primary;
+    }
+  }
+  .el-tabs__active-bar {
+    background-color: @color-primary;
   }
 
   .item {
   cursor: pointer;
   margin-bottom: 18px;
   &:hover {
-    color: #41b883;
+    color: @color-primary;
   }
   }
 
