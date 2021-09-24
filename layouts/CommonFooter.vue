@@ -13,7 +13,9 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
+
   .footer {
     background-color: #333;
     height: 60px;
@@ -23,7 +25,7 @@ export default {
     margin-top: 20px;
     .link {
       &:hover {
-        color: #41b883;
+        color: $--color-primary;
         text-decoration: underline;
       }
     }

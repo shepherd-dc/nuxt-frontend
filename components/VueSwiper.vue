@@ -90,9 +90,11 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
+
   .swiper-pagination-bullet-active {
-    background-color: #41b883!important;
+    background-color: $--color-primary!important;
   }
   .swiper-wrapper {
     img {

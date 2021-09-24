@@ -138,7 +138,9 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
+
   .header {
     background-color: #333;
     color:#fff;
@@ -169,7 +171,7 @@ export default {
       span {
         cursor: pointer;
         &:hover {
-          color: #41b883
+          color: $--color-primary
         }
       }
       .publish-btn {
@@ -181,7 +183,7 @@ export default {
         line-height: 30px;
         text-align: center;
         &:hover {
-          border-color: #41b883
+          border-color: $--color-primary
         }
       }
     }

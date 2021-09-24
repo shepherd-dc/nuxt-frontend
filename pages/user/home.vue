@@ -10,7 +10,7 @@
           </div>
         </AuthorInfo>
         <div class="user-info__edit">
-          <el-button type="success" icon="el-icon-edit">
+          <el-button type="success" icon="el-icon-edit" @click="editProfile">
             编辑资料
           </el-button>
         </div>
@@ -49,20 +49,23 @@
         </el-tabs>
       </keep-alive>
     </el-card>
+    <ProfileDialog v-show="dialogVisible" :visible.sync="dialogVisible" :user-info="userInfo" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import ProfileDialog from './components/profile'
 import AuthorInfo from '~/components/AuthorInfo'
 import ArticleList from '~/components/list/ArticleList'
-import { MENU_LIST, USER_STATISTICS, MY_ARTICLES, MY_STARED_ARTICLES, MY_LIKED_ARTICLES } from '~/api'
+import { MENU_LIST, USER_STATISTICS, GET_USER_INFO, MY_ARTICLES, MY_STARED_ARTICLES, MY_LIKED_ARTICLES } from '~/api'
 import tokenMixin from '@/mixins/token'
 
 export default {
   components: {
     AuthorInfo,
-    ArticleList
+    ArticleList,
+    ProfileDialog
   },
   mixins: [tokenMixin],
   async fetch ({ app }) {
@@ -74,7 +77,9 @@ export default {
       activeName: '1',
       myArticlesData: [],
       myArticlesTotal: 0,
-      statistics: {}
+      statistics: {},
+      dialogVisible: false,
+      userInfo: {}
     }
   },
   computed: {
@@ -112,12 +117,20 @@ export default {
     },
     handleClick (tab, event) {
       // console.log(tab, event)
+    },
+    async editProfile () {
+      this.dialogVisible = true
+      const userInfo = await this.$axios.get(GET_USER_INFO)
+      if (userInfo.error_code === 0) {
+        const { data } = userInfo
+        this.userInfo = data
+      }
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .user-home {
   max-width: 1280px;
   margin: 0 auto;

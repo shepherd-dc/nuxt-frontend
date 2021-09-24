@@ -146,7 +146,9 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
+
   .media-operation {
     margin-top: 10px;
     .operation-icon {
@@ -154,10 +156,10 @@ export default {
       margin-right: 10px;
       cursor: pointer;
       &:hover {
-        color: #41b883;
+        color: $--color-primary;
       }
       &.active {
-        color: #41b883;
+        color: $--color-primary;
       }
     }
   }

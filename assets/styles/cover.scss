@@ -1,37 +1,30 @@
-@color-primary: #41b883;
+/* 改变主题色变量 */
+@import './settings.scss';
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import '~element-ui/packages/theme-chalk/src/index';
+
+.el-popup-parent--hidden {
+  padding-right: 0 !important;
+}
 
 #__layout {
   .el-breadcrumb {
     line-height: 22px;
   }
-  .el-button--text {
-    color: @color-primary;
-  }
-  .el-breadcrumb__inner.is-link:hover, .el-breadcrumb__inner a:hover {
-    color: @color-primary;
-  }
 
   .el-tabs__header {
     margin: 0;
   }
-  .el-tabs__item {
-    &.is-active {
-      color: @color-primary;
-    }
-    &:hover {
-      color: @color-primary;
-    }
-  }
-  .el-tabs__active-bar {
-    background-color: @color-primary;
-  }
 
   .item {
-  cursor: pointer;
-  margin-bottom: 18px;
-  &:hover {
-    color: @color-primary;
-  }
+    cursor: pointer;
+    margin-bottom: 18px;
+    &:hover {
+      color: $--color-primary;
+    }
   }
 
   .clearfix:before,

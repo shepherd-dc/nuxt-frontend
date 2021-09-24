@@ -91,7 +91,8 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="scss">
+@import '~/assets/styles/settings.scss';
 .pagination-container {
   background: #fff;
   padding: 16px 16px 16px 0;
@@ -103,10 +104,10 @@ export default {
   display: none;
 }
 .el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #41b883;
+  background-color: $--color-primary;
 }
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #41b883
+  color: $--color-primary;
 }
 .el-pagination.is-background .el-pager li:not(.disabled).active:hover {
   color: #fff;

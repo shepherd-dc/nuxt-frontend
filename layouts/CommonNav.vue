@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .el-menu.el-menu--horizontal {
   border-bottom: none !important;
 }

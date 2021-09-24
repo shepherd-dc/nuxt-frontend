@@ -23,7 +23,6 @@ module.exports = {
   ** Global CSS
   */
   css: [
-    'element-ui/lib/theme-chalk/index.css',
     'swiper/dist/css/swiper.css',
     'quill/dist/quill.snow.css',
     'highlight.js/styles/monokai-sublime.css'

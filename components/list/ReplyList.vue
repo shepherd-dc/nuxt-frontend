@@ -54,11 +54,13 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+@import '~/assets/styles/settings.scss';
+
 .show-more {
   padding-top: 4px;
   padding-left: 10px;
-  color: #41b883;
+  color: $--color-primary;
   font-size: 15px;
   cursor: pointer;
 }

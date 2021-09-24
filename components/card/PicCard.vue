@@ -57,14 +57,16 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
+
   .text-info {
     padding: 14px;
   }
   .detail-title {
     cursor: pointer;
     &:hover {
-      color: #41b883;
+      color: $--color-primary;
     }
   }
 

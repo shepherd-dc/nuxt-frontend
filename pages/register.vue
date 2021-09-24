@@ -197,7 +197,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+  @import '~/assets/styles/settings.scss';
   .register {
     padding: 60px 10px;
   }
@@ -221,7 +222,7 @@ export default {
     margin: 10px 0;
   }
   .to-login {
-    color: #67C23A;
+    color: $--color-primary;
     cursor: pointer;
   }
 </style>
