@@ -2,7 +2,7 @@
   <div class="reply-item">
     <div class="reply-author-info">
       <div class="reply-author-info__avatar">
-        <el-avatar :size="44" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar :size="44" icon="el-icon-user-solid" :src="avatar" />
       </div>
       <div class="reply-author-info__right">
         <div class="align-box">
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import { REPLY_SUBMIT, REPLY_LIKE, REPLY_DETAIL } from '~/api'
@@ -54,6 +55,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'avatar'
+    ]),
     mediaInfo () {
       return {
         likes: this.replyDetail.likes,

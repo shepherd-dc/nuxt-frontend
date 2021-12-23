@@ -179,6 +179,11 @@ export default {
           formData.type = 100
           const res = await this.$axios.post(REGISTER_URL, formData)
           if (res.error_code === 0) {
+            this.$message({
+              message: '注册成功，请登录。',
+              type: 'success',
+              duration: 5000
+            })
             this.$router.replace('/login')
           }
         } else {

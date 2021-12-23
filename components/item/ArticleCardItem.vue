@@ -1,6 +1,6 @@
 <template>
   <div class="article-card-item" @click="routerToDetail(article.id)">
-    <AuthorInfo :author-info="authorInfo" :author-bold="false" :show-view="false" :avatar-size="40" avatar-src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+    <AuthorInfo :author-info="authorInfo" :author-bold="false" :show-view="false" :avatar-size="40" :avatar-src="avatar" />
     <div class="article-item">
       <h4 class="title">
         {{ article.title }}
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AuthorInfo from '~/components/AuthorInfo'
 import MediaOperation from '~/components/MediaOperation'
 import { ARTICLE_VIEW, ARTICLE_DETAIL, ARTICLE_LIKE, ARTICLE_STAR } from '~/api'
@@ -45,6 +46,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'avatar'
+    ]),
     content () {
       const content = this.article.content.replace(/<\/?.+?>/g, '').substr(0, 280)
       return content.length < 280 ? content : content + '...'

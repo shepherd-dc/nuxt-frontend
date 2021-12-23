@@ -1,12 +1,14 @@
 <template>
-  <el-dialog title="编辑资料" :visible.sync="dialogVisible" @close="handleClose">
+  <el-dialog title="编辑资料" :visible.sync="dialogVisible" @close="hide">
     <el-form :model="form">
       <el-form-item label="头像" :label-width="formLabelWidth">
         <el-upload
           class="avatar-uploader"
-          action="#"
+          :action="imageApi"
           list-type="picture-card"
+          :file-list="fileList"
           :limit="1"
+          :accept="accept"
           :on-exceed="handleExceed"
           :on-success="handleAvatarSuccess"
           :on-remove="handleRemove"
@@ -34,7 +36,7 @@
 </template>
 
 <script>
-import { EDIT_USER_INFO } from '@/api'
+import { EDIT_USER_INFO, UPLOAD_IMAGE } from '@/api'
 export default {
   props: {
     visible: {
@@ -51,9 +53,18 @@ export default {
       dialogVisible: this.visible,
       nickname: this.userInfo.nickname,
       form: {
-        email: this.userInfo.email
+        email: this.userInfo.email,
+        avatar: this.userInfo.avatar
       },
-      formLabelWidth: '60px'
+      formLabelWidth: '60px',
+      accept: '.jpg,.jpeg,.png,.gif',
+      fileList: []
+    }
+  },
+  computed: {
+    imageApi () {
+      const host = process.env.BASE_URL
+      return process.env.NODE_ENV === 'production' ? UPLOAD_IMAGE : host + UPLOAD_IMAGE
     }
   },
   watch: {
@@ -63,6 +74,13 @@ export default {
     userInfo (v) {
       this.nickname = v.nickname
       this.form.email = v.email
+      this.form.avatar = v.avatar
+      const filename = v.avatar.split('/')
+      const name = filename[filename.length - 1]
+      this.fileList = [{
+        name,
+        url: v.avatar
+      }]
     }
   },
   methods: {
@@ -70,10 +88,8 @@ export default {
       await this.save()
       this.hide()
     },
-    handleClose () {
-      this.hide()
-    },
     hide () {
+      this.dialogVisible = false
       this.$emit('update:visible', false)
     },
     async save () {
@@ -85,9 +101,17 @@ export default {
           message: '保存成功',
           type: 'success'
         })
+        this.$store.commit('user/SET_AVATAR', formData.avatar)
       }
     },
     beforeAvatarUpload (file) {
+      const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+      const whiteList = this.accept.split(',')
+      if (!whiteList.includes(fileSuffix)) {
+        this.$message.error(`上传文件只能是${whiteList.join(', ')}格式`)
+        return false
+      }
+
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB')
@@ -98,10 +122,17 @@ export default {
       this.$message.warning('只能上传1张头像，请删除当前头像后再试')
     },
     handleAvatarSuccess (res, file) {
-      console.log(res, file)
+      if (res.error_code === 0) {
+        const { filename: name, path } = res.data
+        const url = process.env.NODE_ENV === 'production' ? path : process.env.BASE_URL + path
+        const fileItem = { name, url }
+        this.fileList = [fileItem]
+        this.form.avatar = url
+      }
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+    async handleRemove (file, fileList) {
+      await this.$axios.delete(`${UPLOAD_IMAGE}/${file.name}`)
+      this.fileList = []
     }
   }
 }

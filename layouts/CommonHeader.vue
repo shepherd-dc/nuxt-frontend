@@ -37,7 +37,7 @@
       </el-row>
     </nav>
     <div class="login">
-      <div v-if="!SNtoken">
+      <div v-if="!SNToken">
         <span @click="routerToLogin()">登录</span> |
         <span @click="routerToRegister()">注册</span>
       </div>
@@ -49,7 +49,7 @@
           发帖
         </span>
         <div class="user-info" @click="routerToUserCenter">
-          <el-avatar class="user-avatar" :size="30" icon="el-icon-user-solid" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+          <el-avatar class="user-avatar" :size="30" icon="el-icon-user-solid" :src="avatar" />
           <span class="text-margin">{{ nickname }}</span>
         </div> |
         <span class="text-margin" @click="routerToLogout()">退出</span>
@@ -62,25 +62,18 @@
 import { mapGetters } from 'vuex'
 import CommonNav from './CommonNav'
 import { isMobile } from '~/utils'
-import { getToken } from '~/utils/auth'
+import { getStorage } from '~/utils/auth'
 export default {
   name: 'CommonHeader',
   components: {
     CommonNav
   },
-  data () {
-    return {
-      activeIndex: '1',
-      isfold: false,
-      token: '',
-      name: ''
-    }
-  },
   computed: {
     ...mapGetters([
       'isPC',
-      'SNtoken',
-      'nickname'
+      'SNToken',
+      'nickname',
+      'avatar'
     ])
   },
   created () {
@@ -91,23 +84,28 @@ export default {
   },
   methods: {
     initUserInfo () {
-      if (!this.SNtoken) {
-        let cookie = getToken()
-        if (cookie) {
-          cookie = JSON.parse(cookie)
-          this.$store.commit('user/SET_TOKEN', cookie)
+      if (!this.SNToken) {
+        const token = getStorage('SN-Token')
+        if (token) {
+          this.$store.commit('user/SET_TOKEN', token)
+        }
+      }
+      if (!this.nickname) {
+        const nickname = getStorage('SN-Nickname')
+        if (nickname) {
+          this.$store.commit('user/SET_NICKNAME', nickname)
+        }
+      }
+      if (!this.avatar) {
+        const avatar = getStorage('SN-Avatar')
+        if (avatar) {
+          this.$store.commit('user/SET_AVATAR', avatar)
         }
       }
     },
     initDevice () {
       const device = isMobile()
       this.$store.commit('SET_DEVICE', !device)
-    },
-    mouseenterHandler () {
-      this.isfold = true
-    },
-    mouseleaveHandler () {
-      this.isfold = false
     },
     routerToLogin () {
       this.$router.push({
@@ -121,7 +119,6 @@ export default {
     },
     routerToLogout () {
       this.$store.dispatch('user/LogOut')
-      this.token = ''
       location = '/'
     },
     routerToPublish () {

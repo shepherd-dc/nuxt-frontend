@@ -1,21 +1,22 @@
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie' // 服务端渲染没有 localStorage
 import { MessageBox } from 'element-ui'
 import { TOKEN_INFO } from '@/api'
 
-export function getToken (TokenKey = 'SN-Token') {
-  return Cookies.get(TokenKey)
+export function getStorage (key) {
+  return Cookies.get(key)
 }
 
-export function setToken (token, TokenKey = 'SN-Token') {
-  return Cookies.set(TokenKey, token)
+export function setStorage (key, val) {
+  if (typeof val === 'object') { val = JSON.stringify(val) }
+  return Cookies.set(key, val)
 }
 
-export function removeToken (TokenKey = 'SN-Token') {
-  return Cookies.remove(TokenKey)
+export function removeStorage (key) {
+  return Cookies.remove(key)
 }
 
 export async function checkToken (ctx) {
-  const token = ctx.$store.getters.SNtoken
+  const token = ctx.$store.getters.SNToken
   let valid = false
 
   if (token) {

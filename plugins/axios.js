@@ -1,5 +1,5 @@
 // import store from '~/store'
-import { getToken } from '~/utils/auth'
+import { getStorage } from '~/utils/auth'
 
 export default function ({ $axios, redirect }) {
   const baseUrl = process.env.NODE_ENV === 'development' ? process.env.LOCAL_URL : process.env.SERVER_URL
@@ -7,12 +7,11 @@ export default function ({ $axios, redirect }) {
 
   $axios.onRequest((config) => {
     // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-    let cookie = getToken()
-    if (cookie) {
-      cookie = JSON.parse(cookie)
-      // config.headers['SN-Token'] = cookie.token
+    const token = getStorage('SN-Token')
+    if (token) {
+      // config.headers['SN-Token'] = token
       config.auth = {}
-      config.auth.username = cookie.token
+      config.auth.username = token
     }
 
     if (process.env.NODE_ENV === 'development') {

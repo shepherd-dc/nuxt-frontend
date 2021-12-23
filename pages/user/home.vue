@@ -2,7 +2,7 @@
   <div class="user-home">
     <el-card class="box-card">
       <div class="user-info">
-        <AuthorInfo :author-info="authorInfo" :avatar-size="80" avatar-src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png">
+        <AuthorInfo :author-info="authorInfo" :avatar-size="80" :avatar-src="avatar">
           <div class="user-data">
             <span class="user-data__item">文章<span class="user-data__item--number">{{ statistics.article_num }}</span></span>
             <span class="user-data__item">收藏<span class="user-data__item--number">{{ statistics.article_star_num }}</span></span>
@@ -49,13 +49,13 @@
         </el-tabs>
       </keep-alive>
     </el-card>
-    <ProfileDialog v-show="dialogVisible" :visible.sync="dialogVisible" :user-info="userInfo" />
+    <EditProfile :visible.sync="dialogVisible" :user-info="userInfo" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import ProfileDialog from './components/profile'
+import EditProfile from '~/components/EditProfile'
 import AuthorInfo from '~/components/AuthorInfo'
 import ArticleList from '~/components/list/ArticleList'
 import { MENU_LIST, USER_STATISTICS, GET_USER_INFO, MY_ARTICLES, MY_STARED_ARTICLES, MY_LIKED_ARTICLES } from '~/api'
@@ -65,7 +65,7 @@ export default {
   components: {
     AuthorInfo,
     ArticleList,
-    ProfileDialog
+    EditProfile
   },
   mixins: [tokenMixin],
   async fetch ({ app }) {
@@ -84,7 +84,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'nickname'
+      'nickname',
+      'avatar'
     ]),
     authorInfo () {
       return {

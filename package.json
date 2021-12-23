@@ -42,7 +42,7 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "nodemon": "^1.18.9",
-    "sass": "^1.26.5",
+    "sass": "~1.26.5",
     "sass-loader": "^8.0.2",
     "stylelint": "^10.1.0",
     "vue-jest": "^4.0.0-0"

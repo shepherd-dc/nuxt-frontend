@@ -24,7 +24,7 @@
               {{ article.title }}
             </h2>
             <div class="article-author">
-              <AuthorInfo :author-info="authorInfo" />
+              <AuthorInfo :author-info="authorInfo" :avatar-src="avatar" />
             </div>
             <div
               class="article"
@@ -112,7 +112,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isPC'
+      'isPC',
+      'avatar'
     ]),
     authorInfo () {
       return {

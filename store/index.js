@@ -39,6 +39,7 @@ export const getters = {
   isPC: state => state.isPC,
   key: state => state.key,
   nickname: state => state.user.nickname,
-  SNtoken: state => state.user.token,
+  avatar: state => state.user.avatar,
+  SNToken: state => state.user.token,
   hasLogin: state => state.user.hasLogin
 }
