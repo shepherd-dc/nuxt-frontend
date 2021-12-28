@@ -2,7 +2,7 @@
   <div class="comment-item">
     <div class="author-info">
       <div class="author-info__avatar">
-        <el-avatar class="author-info__avatar" :size="44" icon="el-icon-user-solid" :src="avatar" />
+        <el-avatar class="author-info__avatar" :size="44" icon="el-icon-user-solid" :src="commentDetail.from_avatar" />
       </div>
       <div class="author-info__right">
         <div class="align-box">
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import MediaOperation from '~/components/MediaOperation'
 import CommentTextarea from '~/components/CommentTextarea'
 import ReplyList from '~/components/list/ReplyList'
@@ -57,9 +56,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'avatar'
-    ]),
     mediaInfo () {
       return {
         likes: this.commentDetail.likes,

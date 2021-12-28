@@ -1,6 +1,6 @@
 <template>
   <div class="author-info">
-    <el-avatar :size="avatarSize" icon="el-icon-user-solid" :src="avatarSrc" />
+    <el-avatar :size="avatarSize" icon="el-icon-user-solid" :src="avatarSrc || authorInfo.avatar" />
     <div class="author-info__right">
       <div class="align-box">
         <div class="name" :style="authorBold ? {fontWeight: 'bold'} : ''">

@@ -75,12 +75,14 @@ export default {
       this.nickname = v.nickname
       this.form.email = v.email
       this.form.avatar = v.avatar
-      const filename = v.avatar.split('/')
-      const name = filename[filename.length - 1]
-      this.fileList = [{
-        name,
-        url: v.avatar
-      }]
+      if (v.avatar) {
+        const filename = v.avatar.split('/')
+        const name = filename[filename.length - 1]
+        this.fileList = [{
+          name,
+          url: v.avatar
+        }]
+      }
     }
   },
   methods: {
